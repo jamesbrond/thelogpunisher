@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" strict="true" name="Test" monitorInterval="3600">
+  <Properties>
+    <!-- level: trace, debug, info, warn, error or fatal  -->
+    <Property name="level">trace</Property>
+    <!-- path: log folder -->
+    <Property name="path">log</Property>
+    <!-- filename: base name of logging file  -->
+    <Property name="filename">thepunisher</Property>
+    <!-- logrotate: hours that causes a rollover on RollingFile appender only  -->
+    <Property name="logrotate">24</Property>
+    <!-- maxsize: maximum size that causes a rollover on RollingFile appender only -->
+    <Property name="maxsize">100MB</Property>
+    <!-- layout: logging message written to file in Console and RollingFile appender only -->
+    <!-- see https://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout -->
+    <Property name="layout">%d{yyyy-MM-dd/HH:mm:ss.SSS} %-5p %notEmpty{[%markerSimpleName]} %c::%M (%L): %m</Property>
+    <!-- color: colors palette used to show log messages in Console appender only-->
+    <Property name="colors">FATAL=bg_red bright white, ERROR=bright red, WARN=bright yellow, INFO=bright cyan, DEBUG=bright white, TRACE=white</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="Log2Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%highlight{${layout}}{${colors}}%n"/>
+      <Filters>
+        <Filter type="MarkerFilter" marker="CATCHING" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+        <Filter type="MarkerFilter" marker="SQL" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+        <Filter type="MarkerFilter" marker="XML" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+      </Filters>
+    </Console>
+    <RollingRandomAccessFile name="Log2RollingFile" fileName="${path}/${filename}.log"
+      filePattern="${path}/$${date:yyyy-MM}/${filename}-%d{yyyy-MM-dd_HH}-%i.log.gz">
+      <Filters>
+        <Filter type="MarkerFilter" marker="CATCHING" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+        <Filter type="MarkerFilter" marker="SQL" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+        <Filter type="MarkerFilter" marker="XML" onMatch="ACCEPT" onMismatch="NEUTRAL" />
+      </Filters>
+      <Layout type="PatternLayout" pattern="${layout}%n" charset="UTF-8" />
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="${logrotate}" modulate="true" />
+        <SizeBasedTriggeringPolicy size="${maxsize}" />
+      </Policies>
+      <DefaultRolloverStrategy max="15" />
+    </RollingRandomAccessFile>
+  </Appenders>
+    
+  <Loggers>
+    <Root level="${level}" additivity="false">
+      <AppenderRef ref="Log2RollingFile" />
+      <AppenderRef ref="Log2Console" />
+    </Root>
+  </Loggers>
+</Configuration>

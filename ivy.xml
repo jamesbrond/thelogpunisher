@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.4">
+  <info organisation="com.carestreamhealth" module="${ant.project.name}" status="release" revision="1" />
+  <publications>
+    <artifact name="${ant.project.name}" type="jar" />
+  </publications>
+  <dependencies>
+    <!-- https://mvnrepository.com -->
+    <dependency org="org.apache.commons" name="commons-lang3" rev="3.8.1"/>
+    <dependency org="com.googlecode.json-simple" name="json-simple" rev="1.1.1" />
+    <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.11.1" />
+    <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.11.1" />
+    <dependency org="info.picocli" name="picocli" rev="3.8.2" />
+    <dependency org="org.yaml" name="snakeyaml" rev="1.23"/>
+  </dependencies>
+</ivy-module>

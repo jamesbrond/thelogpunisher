@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project name="thepunisher" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
+  <property name="project.version" value="1.0.0" />  
+
+  <property environment="env" />
+  <property name="ivy.settings.dir" value="${basedir}" />
+  <ivy:settings file="${ivy.settings.dir}/ivy-settings.xml" />
+  <property name="path.source" value="src" />
+  <property name="path.lib" value="lib" />
+  <property name="path.build" value="build" />
+  <property name="path.release" value="release" />
+  <property name="tool.javac" value="/usr/bin/javac" />
+  <property name="jarjarlinks.jar.file" value="/home/jbrond/bin/jarjar-1.4.jar" />
+  <property name="contrib.jar.file" value="/home/jbrond/bin/ant/lib/ant-contrib-1.0b3.jar" />
+  <property name="ivy.jar.file" value="/home/jbrond/bin/ant/lib/ivy-2.5.0-rc1.jar" />
+
+  <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${contrib.jar.file}" />
+  <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${jarjarlinks.jar.file}" />
+  <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.jar.file}" />
+
+  <tstamp prefix="build-info">
+    <format property="current-date" pattern="yyyy-MM-d" locale="en" />
+    <format property="current-time" pattern="HH:mm:ss z" locale="en" />
+  </tstamp>
+
+  <path id="extra.classpath">
+  </path>
+
+  <target name="clean" description="clean up solution">
+    <echo>${ant.project.name} - clean up solution</echo>
+    <delete includeEmptyDirs="true" failonerror="false" quiet="true">
+      <fileset dir="${path.build}" includes="**/*" defaultexcludes="no" />
+    </delete>
+  </target>
+
+  <target name="init" description="initialize the solution">
+    <echo>${ant.project.name} - initialize the solution</echo>
+    <mkdir dir="${path.build}" />
+    <mkdir dir="${path.build}/classes" />
+    <mkdir dir="${path.lib}" />
+    <mkdir dir="${path.release" />
+    <exec executable="${tool.javac}" outputproperty="out">
+      <arg line="-version" />
+    </exec>
+    <property name="version.java" value="${out}" />
+  </target>
+
+  <target name="compile" depends="init, ivy-resolve" description="compile source">
+    <echo level="info">${ant.project.name} - compile source with ${version.java} (${tool.javac})</echo>
+    <javac executable="${tool.javac}"
+           fork="yes"
+           srcdir="${path.source}"
+           destdir="${path.build}/classes"
+           source="1.10"
+           target="1.10"
+           deprecation="true"
+           includeAntRuntime="false"
+           debug="true">
+      <classpath refid="ivy.classpath" />
+      <classpath refid="extra.classpath" />
+    </javac>
+    <copy file="${path.source}/log4j2.xml" todir="${path.build}/classes" />
+  </target>
+
+  <target name="manifest" depends="init" description="create manifest both for jar and war">
+    <echo>${ant.project.name} - create manifest ${path.build}/MANIFEST.MF</echo>
+    <manifest file="${path.build}/MANIFEST.MF">
+      <attribute name="Application-Name" value="The Punisher" />
+      <attribute name="Permissions" value="all-permissions" />
+      <attribute name="Built-By" value="${user.name}" />
+      <attribute name="Built-On" value="${build-info.current-date}" />
+      <attribute name="Built-At" value="${build-info.current-time}" />
+      <attribute name="Java-Requirement" value="${javac.target}" />
+      <attribute name="Main-Class" value="org.jbrond.punisher.ThePunisher" />
+      <attribute name="Caller-Allowable-Codebase" value="*" />
+      <attribute name="Codebase" value="*" />
+      <section name="${ant.project.name}">
+        <attribute name="Specification-Title" value="${ant.project.name}" />
+        <attribute name="Specification-Version" value="${project.version}" />
+        <attribute name="Specification-Vendor" value="jbrond" />
+        <attribute name="Implementation-Title" value="${ant.project.name}" />
+        <attribute name="Implementation-Version" value="${project.version}" />
+        <attribute name="Implementation-Vendor" value="jbrond" />
+      </section>
+    </manifest>
+  </target>
+
+  <target name="jar" depends="compile, manifest">
+    <echo>${ant.project.name} - jar project into ${ant.project.name}.jar</echo>
+    <pathconvert refid="ivy.classpath" property="ivy.classpath.list" pathsep="," dirsep="/">
+      <map from="${basedir}/${path.lib}/" to="" />
+    </pathconvert>
+    <pathconvert refid="extra.classpath" property="extra.classpath.list" pathsep="," dirsep="/">
+      <map from="${basedir}/${path.lib}/" to="" />
+    </pathconvert>
+
+    <jarjar destfile="release/${ant.project.name}.jar" manifest="${path.build}/MANIFEST.MF" compress="true" level="9" update="false">
+      <fileset dir="${path.build}/classes">
+        <include name="**/*" />
+      </fileset>
+      <fileset dir="${path.build}">
+        <include name="log4j2.xml" />
+      </fileset>
+      <zipgroupfileset dir="${path.lib}" includes="${ivy.classpath.list},${extra.classpath.list}" />
+    </jarjar>
+  </target>
+
+  <target name="ivy-resolve" description="retrieve dependencies with ant-ivy" unless="ivy.resolved">
+    <echo level="info">${ant.project.name} - retrieve dependencies with ant-ivy</echo>
+    <ivy:retrieve pattern="${path.lib}/[artifact]-[revision](-[classifier]).[ext]" pathid="ivy.classpath" />
+    <property name="ivy.resolved" value="true" />
+  </target>
+
+  <target name="ivy-report" depends="ivy-resolve" description="generates a report of dependencies">
+    <echo level="info">${ant.project.name} - generates a report of dependencies</echo>
+    <ivy:report todir="${path.build}" dot="true" />
+  </target>
+
+  <target name="ivy-graph"
+          depends="ivy-report"
+          description="generates a graph of dependencies (requires dot in your path - see http://www.graphviz.org/)">
+    <echo level="info">${ant.project.name} - generates a graph of dependencies</echo>
+    <property name="dot.file" value="${path.build}/com.carestreamhealth-${ant.project.name}-default.dot" />
+    <property name="ivygraph.output.file" value="${path.build}/graph.png" />
+    <exec executable="dot">
+      <arg line="-T png -o ${ivygraph.output.file} ${dot.file}" />
+    </exec>
+  </target>
+
+  <target name="ivy-clean-cache" description="clean the ivy cache">
+    <echo level="info">${ant.project.name} - clean the ivy cache</echo>
+    <delete file="${path.build}/ivy.xml.MD5" />
+    <ivy:cleancache />
+  </target>
+  
+  <target name="-runargs" unless="args" description="prompts for command line arguments if necessary">
+    <property name="args" value="-c archive/test/test.yaml"/>
+  </target>
+
+  <target name="run" depends="jar, -runargs" >
+    <java fork="true" jar="release/${ant.project.name}.jar" dir="${basedir}">
+      <arg line="${args}"/>
+    </java>
+  </target>
+
+  <target name="debug" depends="jar, -runargs">
+    <nbjpdastart addressproperty="jpda.address" name="thepunisher" transport="dt_socket"/>
+    <java dir="${basedir}" fork="true" jar="release/${ant.project.name}.jar">
+      <arg line="${args}"/>
+      <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address},suspend=y"/>
+    </java>
+  </target>
+
+</project>

@@ -1,0 +1,124 @@
+# Yaml configuration file
+
+# Name of the current investigation  
+name: test log 2018.12.14
+
+logs:
+  
+  # Apache access or Apache Tomcat Access log file
+  # Row example:  
+  # 192.168.7.144 - - [14/Dec/2018:22:50:17 +0100] "GET /risweb/indexi.do HTTP/1.1" 200 52862
+    # supported types of file:
+    # - log: file parsed by regular expression
+    # - csv: comma separated values file 
+  - type: log
+    # relative path starting from this configuration file
+    file: access.log
+    options:
+      # the pattern describing the date and time format used in the log file
+      dateformat: "dd/MMM/yyyy:HH:mm:ss Z"
+      # the locale whose date format symbols should be used to parse date in log file
+      locale: en
+      # the expression to match the log row
+      pattern: "([0-9\\.]+) - - \\[([\\w:/]+\\s[+\\-]\\d{4})\\] (.*)"
+      # the indexes of a capturing groups in this matcher's pattern of the global matching row pattern
+      matches: 
+        ip: 1
+        date: 2
+        message: 3
+      # ignore all lines which message doesn't match any of the filter regexp patterns
+      filters:
+        - pattern: ".*pkgwwwmsg\\.auto_check\\?userid=(\\w+)"
+          # the indexes of a capturing groups in this matcher's pattern of the filter regexp
+          matches:
+            user: 1
+        - pattern: ".*showLogin\\.do(;jsessionid=(\\w+))?"
+          matches: 
+            session: 1
+        - pattern: ".*pkgwwwmsg\\.notification_get_list\\?loginid=(\\w+)"
+          matches: 
+            session: 1
+        - pattern: ".*logout\\.do"
+
+  # Apache Tomcat output file
+  - type: log
+    file: catalina.out
+    options: 
+      dateformat: "dd-MMM-yyyy HH:mm:ss.S"
+      locale: en
+      pattern: "([0-9a-zA-Z/-]+ \\d{2}:\\d{2}:\\d{2}.\\d{3}) (.*)"
+      matches: 
+        date: 1
+        message: 2
+    
+  # CSV export of WWWUSERS table with query:
+  # SELECT loginid, euserid, ip, to_char(lastdtm, 'DD/MM/YYYY HH24:Mi:SS') lastdtm, sessionid, remoteuser, instname
+  #   FROM wwwusers
+  #  WHERE trunc(wwwusers.creationdate) = to_date('2018-12-14', 'YYYY-MM-DD')
+  #  ORDER BY wwwusers.creationdate ASC
+  # Row example:
+  # "RIS       ","ris       ","192.168.14.1   ","22/10/2018 13:00:09","1BBCE0319193F09DB9FD528D50A8A0EA","",""
+  - type: csv
+    file: wwwusers.csv
+    options:
+      separator: ","
+      quote: '"'
+      dateformat: "dd/MM/yyyy HH:mm:ss"
+      matches: 
+        user: 0
+        ip: 2
+        date: 3
+        session: 4
+
+  # CSV export of RISLOG table with query:
+  # SELECT lbooknr,
+  #        lid,
+  #        luser,
+  #        to_char(ldatetime, 'DD/MM/YYYY HH24:Mi:SS') ldatetime,
+  #        ltrans,
+  #        lreqnr,
+  #        program,
+  #        host,
+  #        osuserid,
+  #        sessionid,
+  #        dbconnectedip,
+  #        webclientip
+  #   FROM rislog
+  #  WHERE trunc(rislog.ldatetime) = to_date('2018-12-14', 'YYYY-MM-DD')
+  #  ORDER BY rislog.ldatetime ASC
+  # Row example:
+  # "72759839","39309       ","RIC       ","17/12/2018 02:01:36","Booking updated.","72759837","RIC","MMRIS01","MMRIS01$","63061534","127.0.0.1","127.0.0.1"
+  - type: csv
+    file: rislog.csv
+    options:
+      # separatore delle colonne
+      separator: ","
+      # formato della data ldatetime
+      dateformat: "dd/MM/yyyy HH:mm:ss"
+      matches: 
+        user: 2
+        date: 3
+        message: 4
+        ip: 11
+
+  # risweb.log file
+  # Rows example (version 10.1.17):
+  # 2019-01-09/09:12:38.877 INFO   #48F72432235F8960838FF320EF36BCF3  ck.risweb.LoginAction::execute (378): returning: success redirecting to /indexi.do
+  # 2019-01-09/09:12:38.971 TRACE  #48F72432235F8960838FF320EF36BCF3 (@RIS) ck.risweb.CKRequestProcessor::process (76): Cookies length = 11
+  - type: log
+    file: risweb.log
+    options:
+      dateformat: "yyyy-MM-dd'/'HH:mm:ss.S"
+      pattern: "([0-9\\/:\\\\.-]+) \\w+ (\\[(.+)\\])? (#(\\w+))? (\\(@(\\w+)\\))?\\s+([0-9a-zA-Z_\\$\\.-]+::[0-9a-zA-Z_\\$<>\\\\.-]+) \\((\\d+)\\): (.*)"
+      matches: 
+        date: 1
+        session: 5
+        user: 7
+        message: 10
+      # details, like filters improve are regular expression that match the log message and get more details from it.
+      # unlike filters details do not prevent other rows to be matched. Filters and details are mutual exclusive
+      details:
+        - pattern: "session created: (\\w+)"
+          # the indexes of a capturing groups in this matcher's pattern of the filter regexp
+          matches:
+            session: 1
