@@ -84,34 +84,28 @@ public class LogParserCSV extends LogParser implements LogParserInterface {
         if (ch == customQuote) {
           inQuotes = true;
           //Fixed : allow "" in empty quote enclosed
-          if (chars[0] != '"' && customQuote == '\"') {
+          if ('"' != chars[0] && '\"' == customQuote) {
             curVal.append('"');
           }
           //double quotes in column will hit this!
           if (startCollectChar) {
             curVal.append('"');
           }
-        } else if (ch == separators) {
-
+        } else if (separators == ch) {
           result.add(curVal.toString());
-
           curVal = new StringBuilder();
           startCollectChar = false;
-
-        } else if (ch == '\r') {
+        } else if ('\r' == ch) {
           //ignore LF characters
-        } else if (ch == '\n') {
+        } else if ('\n' == ch) {
           //the end, break!
           break;
         } else {
           curVal.append(ch);
         }
       }
-
     }
-
     result.add(curVal.toString());
-
     return result;
   }
 }

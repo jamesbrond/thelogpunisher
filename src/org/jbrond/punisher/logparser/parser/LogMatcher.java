@@ -22,5 +22,5 @@ public class LogMatcher {
   public Matcher match(String str) {
     return null != m_pattern ? m_pattern.matcher(str) : null;
   }
-  
+
 }

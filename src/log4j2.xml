@@ -46,7 +46,7 @@
   <Loggers>
     <Root level="${level}" additivity="false">
       <AppenderRef ref="Log2RollingFile" />
-      <AppenderRef ref="Log2Console" />
+      <!--<AppenderRef ref="Log2Console" />-->
     </Root>
   </Loggers>
 </Configuration>

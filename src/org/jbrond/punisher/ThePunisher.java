@@ -27,13 +27,17 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.MissingParameterException;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.RunLast;
 
-@Command(name = "thepunisher", mixinStandardHelpOptions = true, version = "The Punisher v0.0.1")
+@Command(name = "thepunisher", mixinStandardHelpOptions = true, version = "The Punisher v1.0.0")
 public class ThePunisher implements Runnable {
 
+  private static final Logger L = LogManager.getLogger(ThePunisher.class.getName());
+
   @Option(names = {"-c",
-    "--configuration"}, required = true, arity = "1", paramLabel = "FILE", description = "Configuration file with instruction.")
+    "--configuration"}, required = true, arity = "1", paramLabel = "FILE", description = "Mandatory configuration file with instructions.")
   private File o_confFile;
 
   @Option(names = {"-f", "--filter"}, paramLabel = "KEY=VALUE", description = "Filter the input log(s) to extract only matching lines.")
@@ -42,16 +46,18 @@ public class ThePunisher implements Runnable {
   @Option(names = {"-o", "--output"}, paramLabel = "FILE", description = "Redirect output stream (default: System.out).")
   private final Writer o_output = new OutputStreamWriter(System.out);
 
-  private static final Logger L = LogManager.getLogger(ThePunisher.class.getName());
-
   public static void main(String[] args) {
+    CommandLine cl = new CommandLine(new ThePunisher());
     try {
-      Runnable app = new ThePunisher();
-
-      CommandLine cl = new CommandLine(app).registerConverter(java.io.Writer.class, o -> new PrintWriter(o));
-      cl.parse(args);
-      app.run();
-      System.exit(0);
+      cl.registerConverter(java.io.Writer.class, o -> new PrintWriter(o))
+              .parseWithHandlers(
+                      new RunLast().andExit(0),
+                      CommandLine.defaultExceptionHandler().andExit(1),
+                      args);
+    } catch (MissingParameterException e) {
+      L.error(e);
+      System.err.println("ERROR: " + e.getMessage());
+      cl.usage(System.out);
     } catch (Exception e) {
       L.fatal(e);
       L.catching(e);
@@ -85,18 +91,6 @@ public class ThePunisher implements Runnable {
         anal.add(path, l.getType(), l.getOptions());
       });
 
-//    m_conf = new INIConfiguration();
-//
-//    try {
-//      m_conf.read(new FileReader(o_confFile));
-//      m_conf.addProperty("basepath", basePath);
-//      Set<String> sections = m_conf.getSections();
-//
-//      sections.forEach((s) -> {
-//        SubnodeConfiguration sectionConf = m_conf.getSection(s);
-//        String file = new StringBuilder().append(basePath).append(File.separatorChar).append(sectionConf.getString("file")).toString();
-//      });
-//
       Stream<LogObject> stream;
       if (null == o_filters || o_filters.isEmpty()) {
         L.debug("filter by: no filter");
@@ -116,8 +110,6 @@ public class ThePunisher implements Runnable {
           }
         });
       }
-////      anal.stream().filter(x -> "COLAMUSSIP".equals(x.get("user"))).forEach(System.out::println);
-//
     } catch (IOException e) {
       L.error(e);
       L.catching(e);
