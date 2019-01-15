@@ -1,6 +1,8 @@
+.ant-targets-build.xml
 .ivy/
 archive/
 build/
 lib/
+log/
 nbproject/
 release/

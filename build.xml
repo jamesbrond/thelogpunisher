@@ -3,10 +3,9 @@
 <project name="thepunisher" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <property environment="env" />
-  <property name="ivy.settings.dir" value="${basedir}" />
-  <ivy:settings file="${ivy.settings.dir}/ivy-settings.xml" />
   <property file="build.properties" />
   <property file="build_user.properties" />
+  <ivy:settings file="ivy-settings.xml" />
 
   <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${contrib.jar.file}" />
   <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${jarjarlinks.jar.file}" />
@@ -88,7 +87,7 @@
       <map from="${basedir}/${path.lib}/" to="" />
     </pathconvert>
 
-    <jarjar destfile="${path.release}/${project.name}.jar" manifest="${path.build}/MANIFEST.MF" compress="true" level="9" update="false">
+    <jarjar destfile="${path.release}/${project.name}-${project.version}.jar" manifest="${path.build}/MANIFEST.MF" compress="true" level="9" update="false">
       <fileset dir="${path.build}/classes">
         <include name="**/*" />
       </fileset>
@@ -127,19 +126,30 @@
     <ivy:cleancache />
   </target>
   
+  <target name="ivy-publish" depends="ivy-resolve" description="publish this project in the ivy repository">
+    <echo>${project.name} - publish this project in the ivy repository</echo>
+    <ivy:publish artifactspattern="${path.release}/[artifact]-[revision].[ext]"
+                 resolver="projects"
+                 pubrevision="${project.version}"
+                 status="release"
+                 overwrite="true"
+                 update="true" />
+    <echo>project ${project.name} released with version ${project.version}</echo>
+  </target>
+  
   <target name="-runargs" unless="args">
     <property name="args" value="-c archive/test/test.yaml"/>
   </target>
 
   <target name="run" depends="jar, -runargs" description="Run the application">
-    <java fork="true" jar="${path.release}/${project.name}.jar" dir="${basedir}">
+    <java fork="true" jar="${path.release}/${project.name}-${project.version}.jar" dir="${basedir}">
       <arg line="${args}"/>
     </java>
   </target>
 
   <target name="debug" depends="jar, -runargs" description="Run the application in debug mode">
     <nbjpdastart addressproperty="jpda.address" name="thepunisher" transport="dt_socket"/>
-    <java dir="${basedir}" fork="true" jar="${path.release}/${project.name}.jar">
+    <java dir="${basedir}" fork="true" jar="${path.release}/${project.name}-${project.version}.jar">
       <arg line="${args}"/>
       <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address},suspend=y"/>
     </java>

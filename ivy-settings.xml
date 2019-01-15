@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivysettings>
-  <properties file="${ivy.settings.dir}/ivy-settings.properties" />
   <settings defaultResolver="local-chain" />
-  <caches defaultCacheDir="${ivy.settings.dir}/.ivy/cache" />
+  <caches defaultCacheDir="${basedir}/.ivy/cache" />
   <resolvers>
     <filesystem name="projects">
-      <artifact pattern="${repository.dir}/[artifact]-[revision].[ext]" />
-      <ivy pattern="${repository.dir}/[module]-[revision].xml" />
+      <artifact pattern="${basedir}/.ivy/repository/[artifact]-[revision].[ext]" />
+      <ivy pattern="${basedir}/.ivy/repository/[module]-[revision].xml" />
     </filesystem>
     <ibiblio name="dcm4che" m2compatible="true" root="https://www.dcm4che.org/maven2/" />
     <ibiblio name="enonic" m2compatible="true" root="http://repo.enonic.com/public/" />

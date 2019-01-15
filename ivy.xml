@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.4">
-  <info organisation="com.carestreamhealth" module="${ant.project.name}" status="release" revision="1" />
+  <info organisation="com.carestreamhealth" module="${project.name}" status="release" revision="${project.version}" />
   <publications>
-    <artifact name="${ant.project.name}" type="jar" />
+    <artifact name="${project.name}" type="jar" />
   </publications>
   <dependencies>
     <!-- https://mvnrepository.com -->
