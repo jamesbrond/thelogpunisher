@@ -42,6 +42,7 @@
       <echo>Get git revision from working copy @{dir}</echo>
       <git command="rev-parse" output="@{property}">
         <args>
+          <arg value="--short"/>
           <arg value="HEAD"/>
         </args>
       </git>
@@ -110,7 +111,7 @@
   </target>
 
   <target name="jar" depends="compile, manifest">
-    <echo>${project.name} - jar project into ${project.name}.jar</echo>
+    <echo>${project.name} - jar project into ${project.name}-${project.version}.jar</echo>
     <pathconvert refid="ivy.classpath" property="ivy.classpath.list" pathsep="," dirsep="/">
       <map from="${basedir}/${path.lib}/" to="" />
     </pathconvert>
