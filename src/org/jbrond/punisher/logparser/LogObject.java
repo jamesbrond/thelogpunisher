@@ -22,6 +22,7 @@ public class LogObject {
 
   private final DateTimeFormatter m_dateformat;
 
+  private final String m_filename;
   private final LocalDateTime m_date;
   private final String m_ip;
   private final String m_message;
@@ -36,6 +37,7 @@ public class LogObject {
     m_message = builder.m_message;
     m_user = builder.m_user;
     m_session = builder.m_session;
+    m_filename = builder.m_filename;
   }
 
   public LocalDateTime getDate() {
@@ -61,6 +63,10 @@ public class LogObject {
   public String getSession() {
     return m_session;
   }
+  
+  public String getFilename() {
+    return m_filename;
+  }
 
   public String get(String key) {
     switch (key) {
@@ -74,6 +80,7 @@ public class LogObject {
         return getUser();
       case MATCHER_KEY_SESSION:
         return getSession();
+      
       default:
         return null;
     }
@@ -81,8 +88,9 @@ public class LogObject {
 
   @Override
   public String toString() {
-    StringBuilder str = new StringBuilder();
-    str.append(getFormatDate()).append(' ').append(getMessage());
+    StringBuilder str = new StringBuilder()
+            .append(getFormatDate())
+            .append(' ').append(getMessage());
     if (null != m_ip) {
       str.append(' ').append("from ").append(getIp());
     }
@@ -92,6 +100,8 @@ public class LogObject {
     if (null != m_session) {
       str.append(' ').append("JSESSIONID: ").append(getSession());
     }
+    str.append(' ').append('[').append(getFilename()).append(']');
+
     return str.toString();
   }
 
@@ -102,6 +112,7 @@ public class LogObject {
     m.put("message", getMessage());
     m.put("user", getUser());
     m.put("session", getSession());
+    m.put("filename", getFilename());
     return JSONValue.toJSONString(m);
   }
 
@@ -121,6 +132,7 @@ public class LogObject {
     private String m_message;
     private String m_user;
     private String m_session;
+    private String m_filename;
 
     public final Builder setDate(final Date date) {
       m_date = null != date ? date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
@@ -148,6 +160,11 @@ public class LogObject {
 
     public final Builder setSession(final String session) {
       m_session = session;
+      return this;
+    }
+    
+    public final Builder setFilename(final String filename) {
+      m_filename = filename;
       return this;
     }
 

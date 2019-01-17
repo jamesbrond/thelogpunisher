@@ -43,12 +43,13 @@ public class LogAnalyzer {
     if (t == -1) {
       throw new ConfigurationException("Unknown log type");
     }
+    String filename = file.getFileName().toString();
     switch (t) {
       case LogParser.LOG_TYPE_LOG:
-        parser = new LogParser(options);
+        parser = new LogParser(options, filename);
         break;
       case LogParser.LOG_TYPE_CSV:
-        parser = new LogParserCSV(options);
+        parser = new LogParserCSV(options, filename);
         break;
       default:
         throw new ConfigurationException("Unknown log type");

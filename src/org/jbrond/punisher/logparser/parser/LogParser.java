@@ -26,14 +26,16 @@ public class LogParser implements LogParserInterface {
   public static final int LOG_TYPE_CSV = 1;
 
   protected final LogOptionsConfig m_options;
+  protected final String m_filename;
   protected final Pattern m_rowPattern;
   protected final Map<String, Integer> m_rowMatches;
   protected final List<LogFiltersConfig> m_filters;
   protected final List<LogFiltersConfig> m_details;
   protected final SimpleDateFormat m_dateformat;
 
-  public LogParser(LogOptionsConfig options) throws ConfigurationException {
+  public LogParser(LogOptionsConfig options, String filename) throws ConfigurationException {
     m_options = options;
+    m_filename = filename;
     m_rowPattern = options.getCompiledPattern();
     m_dateformat = options.getSimpleDateformat();
     if (null == m_dateformat) {
@@ -104,6 +106,7 @@ public class LogParser implements LogParserInterface {
 
   protected LogObject buildLogObject(Map<String, String> item) throws ParseException {
     return new LogObject.Builder()
+            .setFilename(m_filename)
             .setDate(item.containsKey(LogObject.MATCHER_KEY_DATE) ? m_dateformat.parse(item.get(LogObject.MATCHER_KEY_DATE)) : null)
             .setIp(item.containsKey(LogObject.MATCHER_KEY_IP) ? item.get(LogObject.MATCHER_KEY_IP) : null)
             .setMessage(item.containsKey(LogObject.MATCHER_KEY_MESSAGE) ? item.get(LogObject.MATCHER_KEY_MESSAGE) : null)

@@ -23,8 +23,8 @@ public class LogParserCSV extends LogParser implements LogParserInterface {
   private final char m_separator;
   private final char m_quote;
 
-  public LogParserCSV(LogOptionsConfig options) throws ConfigurationException {
-    super(options);
+  public LogParserCSV(LogOptionsConfig options, String filename) throws ConfigurationException {
+    super(options, filename);
     String separator = options.getSeparator();
     m_separator = separator == null || separator.isEmpty() ? DEFAULT_SEPARATOR : separator.charAt(0);
     String quote = options.getQuote();

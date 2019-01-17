@@ -31,7 +31,7 @@ import picocli.CommandLine.MissingParameterException;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.RunLast;
 
-@Command(name = "thepunisher", mixinStandardHelpOptions = true, version = "The Punisher v1.0.0")
+@Command(name = "thepunisher", mixinStandardHelpOptions = true, version = "The Punisher v1.1.0")
 public class ThePunisher implements Runnable {
 
   private static final Logger L = LogManager.getLogger(ThePunisher.class.getName());
