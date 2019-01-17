@@ -19,6 +19,35 @@
   <path id="extra.classpath">
   </path>
 
+  <macrodef name="git">
+    <attribute name="command" />
+    <attribute name="dir" default="" />
+    <attribute name="failonerror" default="false"/>
+    <attribute name="output" default="NOT SET" />
+    <element name="args" optional="true" />
+    <sequential>
+      <echo message="git @{command}" />
+      <exec executable="git" dir="@{dir}" outputproperty="@{output}" failonerror="@{failonerror}">
+        <arg value="@{command}" />
+        <args/>
+      </exec>
+    </sequential>
+  </macrodef>
+	
+  <macrodef name="git-revision">
+    <attribute name="property"/>
+    <attribute name = "dir" default = "" />
+    <attribute name="failonerror" default="false"/>
+    <sequential>
+      <echo>Get git revision from working copy @{dir}</echo>
+      <git command="rev-parse" output="@{property}">
+        <args>
+          <arg value="HEAD"/>
+        </args>
+      </git>
+    </sequential>
+  </macrodef>
+
   <target name="clean" description="clean up solution">
     <echo>${project.name} - clean up solution</echo>
     <delete includeEmptyDirs="true" failonerror="false" quiet="true">
@@ -36,6 +65,8 @@
       <arg line="-version" />
     </exec>
     <property name="version.java" value="${out}" />
+    <git-revision property="git.revision"></git-revision>
+    <echo>Git revision: ${git.revision}</echo> 
   </target>
 
   <target name="compile" depends="init, ivy-resolve" description="compile source">
@@ -72,7 +103,7 @@
         <attribute name="Specification-Version" value="${project.version}" />
         <attribute name="Specification-Vendor" value="jbrond" />
         <attribute name="Implementation-Title" value="${project.name}" />
-        <attribute name="Implementation-Version" value="${project.version}" />
+        <attribute name="Implementation-Version" value="${git.revision}" />
         <attribute name="Implementation-Vendor" value="jbrond" />
       </section>
     </manifest>
