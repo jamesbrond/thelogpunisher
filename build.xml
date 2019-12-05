@@ -99,6 +99,7 @@
       <attribute name="Main-Class" value="org.jbrond.punisher.ThePunisher" />
       <attribute name="Caller-Allowable-Codebase" value="*" />
       <attribute name="Codebase" value="*" />
+      <attribute name="Multi-Release" value="true" />
       <section name="${project.name}">
         <attribute name="Specification-Title" value="${project.name}" />
         <attribute name="Specification-Version" value="${project.version}" />
