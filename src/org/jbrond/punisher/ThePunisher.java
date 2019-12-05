@@ -13,14 +13,9 @@ import org.apache.logging.log4j.Logger;
 import org.jbrond.punisher.config.ConfigurationFactory;
 import org.jbrond.punisher.config.GlobalConfig;
 import org.jbrond.punisher.config.LogConfig;
-import org.jbrond.punisher.config.LogFiltersConfig;
-import org.jbrond.punisher.config.LogOptionsConfig;
 import org.jbrond.punisher.logparser.LogAnalyzer;
 import org.jbrond.punisher.logparser.LogObject;
 import org.jbrond.punisher.writer.OutputWriterFactory;
-import org.yaml.snakeyaml.TypeDescription;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -67,12 +62,6 @@ public class ThePunisher implements Callable<Integer> {
   public Integer call() throws Exception {
     L.info("Search for the guilty and the persecution of the innocent...");
     L.trace("configuration file: {}", o_confFile.getAbsolutePath());
-    Constructor yamlConstructor = new Constructor(GlobalConfig.class);
-    TypeDescription customTypeDescription = new TypeDescription(GlobalConfig.class);
-    customTypeDescription.addPropertyParameters("options", LogOptionsConfig.class);
-    customTypeDescription.addPropertyParameters("filters", LogFiltersConfig.class);
-    yamlConstructor.addTypeDescription(customTypeDescription);
-    Yaml yaml = new Yaml(yamlConstructor);
 
     try {
       String basePath = o_confFile.getParent();
