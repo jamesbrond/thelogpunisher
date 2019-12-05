@@ -24,7 +24,7 @@ import picocli.CommandLine.Option;
 
 @Command(name = "thepunisher",
         mixinStandardHelpOptions = true,
-        version = "The Punisher v1.1.0",
+        version = "1.2.0",
         description = "Search for the guilty and the persecution of the innocent")
 public class ThePunisher implements Callable<Integer> {
 

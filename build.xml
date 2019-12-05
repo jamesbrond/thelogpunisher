@@ -67,7 +67,7 @@
     </exec>
     <property name="version.java" value="${out}" />
     <git-revision property="git.revision"></git-revision>
-    <echo>Git revision: ${git.revision}</echo> 
+    <echo>Git revision: ${git.revision}</echo>
   </target>
 
   <target name="compile" depends="init, ivy-resolve" description="compile source">
