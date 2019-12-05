@@ -1,13 +1,7 @@
 package org.jbrond.punisher;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -23,19 +17,18 @@ import org.jbrond.punisher.config.LogFiltersConfig;
 import org.jbrond.punisher.config.LogOptionsConfig;
 import org.jbrond.punisher.logparser.LogAnalyzer;
 import org.jbrond.punisher.logparser.LogObject;
+import org.jbrond.punisher.writer.OutputWriterFactory;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.MissingParameterException;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.RunLast;
 
 @Command(name = "thepunisher",
         mixinStandardHelpOptions = true,
-        version = "1.2.0",
+        version = "1.2.1",
         description = "Search for the guilty and the persecution of the innocent")
 public class ThePunisher implements Callable<Integer> {
 
@@ -54,9 +47,9 @@ public class ThePunisher implements Callable<Integer> {
   private Map<String, String> o_filters;
 
   @Option(names = {"-o", "--output"},
-          paramLabel = "FILE",
+          paramLabel = "filename",
           description = "Redirect output stream (default: System.out).")
-  private final Writer o_output = new OutputStreamWriter(System.out);
+  private File o_output;
 
   public static void main(String... args) {
     int exitCode;
@@ -85,7 +78,6 @@ public class ThePunisher implements Callable<Integer> {
       String basePath = o_confFile.getParent();
       GlobalConfig conf = ConfigurationFactory.read(o_confFile);
       L.info("Run log parsing '{}'", conf.getName());
-      String basePath = o_confFile.getParent();
 
       LogAnalyzer anal = new LogAnalyzer();
       List<LogConfig> sessions = conf.getLogs();
@@ -105,16 +97,8 @@ public class ThePunisher implements Callable<Integer> {
         L.debug("filter by: {}", o_filters);
         stream = anal.sort().stream().filter(x -> x.filter(o_filters));
       }
-      try ( BufferedWriter out = new BufferedWriter(o_output)) {
-        stream.forEach((LogObject x) -> {
-          try {
-            out.write(x.toString());
-            out.newLine();
-          } catch (IOException e) {
-            L.warn(e);
-          }
-        });
-      }
+
+      OutputWriterFactory.build(o_output).write(stream);
       return 0;
     } catch (IOException e) {
       L.error(e);
