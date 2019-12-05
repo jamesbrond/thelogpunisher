@@ -2,8 +2,11 @@ package org.jbrond.punisher;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.util.List;
@@ -16,11 +19,19 @@ import org.apache.logging.log4j.Logger;
 import org.jbrond.punisher.config.ConfigurationFactory;
 import org.jbrond.punisher.config.GlobalConfig;
 import org.jbrond.punisher.config.LogConfig;
+import org.jbrond.punisher.config.LogFiltersConfig;
+import org.jbrond.punisher.config.LogOptionsConfig;
 import org.jbrond.punisher.logparser.LogAnalyzer;
 import org.jbrond.punisher.logparser.LogObject;
+import org.yaml.snakeyaml.TypeDescription;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.MissingParameterException;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.RunLast;
 
 @Command(name = "thepunisher",
         mixinStandardHelpOptions = true,
@@ -63,11 +74,18 @@ public class ThePunisher implements Callable<Integer> {
   public Integer call() throws Exception {
     L.info("Search for the guilty and the persecution of the innocent...");
     L.trace("configuration file: {}", o_confFile.getAbsolutePath());
+    Constructor yamlConstructor = new Constructor(GlobalConfig.class);
+    TypeDescription customTypeDescription = new TypeDescription(GlobalConfig.class);
+    customTypeDescription.addPropertyParameters("options", LogOptionsConfig.class);
+    customTypeDescription.addPropertyParameters("filters", LogFiltersConfig.class);
+    yamlConstructor.addTypeDescription(customTypeDescription);
+    Yaml yaml = new Yaml(yamlConstructor);
 
     try {
       String basePath = o_confFile.getParent();
       GlobalConfig conf = ConfigurationFactory.read(o_confFile);
       L.info("Run log parsing '{}'", conf.getName());
+      String basePath = o_confFile.getParent();
 
       LogAnalyzer anal = new LogAnalyzer();
       List<LogConfig> sessions = conf.getLogs();
@@ -87,7 +105,7 @@ public class ThePunisher implements Callable<Integer> {
         L.debug("filter by: {}", o_filters);
         stream = anal.sort().stream().filter(x -> x.filter(o_filters));
       }
-      try (BufferedWriter out = new BufferedWriter(o_output)) {
+      try ( BufferedWriter out = new BufferedWriter(o_output)) {
         stream.forEach((LogObject x) -> {
           try {
             out.write(x.toString());

@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package org.jbrond.punisher.config;
 
 import java.time.format.DateTimeFormatter;
@@ -17,16 +22,17 @@ public class LogOptionsConfig {
   private String m_quote;
   private List<LogFiltersConfig> m_filters;
   private Map<String, Integer> m_matches;
-  private List<LogFiltersConfig> m_details;
+    private List<LogFiltersConfig> m_details;
+  
 
   public LogOptionsConfig() {
     m_locale = Locale.ENGLISH;
   }
-
+  
   public String getDateformat() {
     return m_dateformat;
   }
-
+  
   public DateTimeFormatter getDateTimeFormat() {
     return new DateTimeFormatterBuilder().appendPattern(m_dateformat)
             .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
@@ -40,7 +46,7 @@ public class LogOptionsConfig {
   }
 
   public String getLocale() {
-    return null != m_locale ? m_locale.getLanguage() : null;
+    return null != m_locale ? m_locale.getLanguage(): null;
   }
 
   public void setLocale(String locale) {
@@ -54,7 +60,7 @@ public class LogOptionsConfig {
   public void setPattern(String pattern) {
     m_pattern = null != pattern ? Pattern.compile(pattern) : null;
   }
-
+  
   public Pattern getCompiledPattern() {
     return m_pattern;
   }
@@ -82,8 +88,8 @@ public class LogOptionsConfig {
   public void setFilters(List<LogFiltersConfig> filters) {
     m_filters = filters;
   }
-
-  public List<LogFiltersConfig> getDetails() {
+  
+   public List<LogFiltersConfig> getDetails() {
     return m_details;
   }
 
