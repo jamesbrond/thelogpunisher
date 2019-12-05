@@ -20,17 +20,16 @@ public class LogOptionsConfig {
   private String m_quote;
   private List<LogFiltersConfig> m_filters;
   private Map<String, Integer> m_matches;
-    private List<LogFiltersConfig> m_details;
-  
+  private List<LogFiltersConfig> m_details;
 
   public LogOptionsConfig() {
     m_locale = Locale.ENGLISH;
   }
-  
+
   public String getDateformat() {
     return m_dateformat;
   }
-  
+
   public SimpleDateFormat getSimpleDateformat() {
     return new SimpleDateFormat(m_dateformat, m_locale);
   }
@@ -40,7 +39,7 @@ public class LogOptionsConfig {
   }
 
   public String getLocale() {
-    return null != m_locale ? m_locale.getLanguage(): null;
+    return null != m_locale ? m_locale.getLanguage() : null;
   }
 
   public void setLocale(String locale) {
@@ -54,7 +53,7 @@ public class LogOptionsConfig {
   public void setPattern(String pattern) {
     m_pattern = null != pattern ? Pattern.compile(pattern) : null;
   }
-  
+
   public Pattern getCompiledPattern() {
     return m_pattern;
   }
@@ -82,8 +81,8 @@ public class LogOptionsConfig {
   public void setFilters(List<LogFiltersConfig> filters) {
     m_filters = filters;
   }
-  
-   public List<LogFiltersConfig> getDetails() {
+
+  public List<LogFiltersConfig> getDetails() {
     return m_details;
   }
 

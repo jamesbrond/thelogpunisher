@@ -9,7 +9,6 @@ public class LogConfig {
 
   private String m_type;
   private String m_file;
-//  private Map<String, Object> m_options;
   private LogOptionsConfig m_options;
 
   public void setType(String type) {
