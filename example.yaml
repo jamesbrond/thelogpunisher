@@ -16,7 +16,7 @@ logs:
     file: access.log
     options:
       # the pattern describing the date and time format used in the log file
-      dateformat: "dd/MMM/yyyy:HH:mm:ss Z"
+      dateformat: "dd/MMM/yyyy:HH:mm:ss ZZZ"
       # the locale whose date format symbols should be used to parse date in log file
       locale: en
       # the expression to match the log row
@@ -44,7 +44,7 @@ logs:
   - type: log
     file: catalina.out
     options: 
-      dateformat: "dd-MMM-yyyy HH:mm:ss.S"
+      dateformat: "dd-MMM-yyyy HH:mm:ss.SSS"
       locale: en
       pattern: "([0-9a-zA-Z/-]+ \\d{2}:\\d{2}:\\d{2}.\\d{3}) (.*)"
       matches: 
@@ -108,7 +108,7 @@ logs:
   - type: log
     file: risweb.log
     options:
-      dateformat: "yyyy-MM-dd'/'HH:mm:ss.S"
+      dateformat: "yyyy-MM-dd'/'HH:mm:ss.SSS"
       pattern: "([0-9\\/:\\\\.-]+) \\w+ (\\[(.+)\\])? (#(\\w+))? (\\(@(\\w+)\\))?\\s+([0-9a-zA-Z_\\$\\.-]+::[0-9a-zA-Z_\\$<>\\\\.-]+) \\((\\d+)\\): (.*)"
       matches: 
         date: 1

@@ -1,7 +1,9 @@
 package org.jbrond.punisher.logparser.parser;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -17,26 +19,26 @@ import org.jbrond.punisher.config.LogOptionsConfig;
 import org.jbrond.punisher.logparser.LogObject;
 
 public class LogParser implements LogParserInterface {
-
+  
   private static final Logger L = LogManager.getLogger(LogParser.class.getName());
-
+  
   public static final List<String> LOG_TYPES = Arrays.asList(new String[]{"log", "csv"});
   public static final int LOG_TYPE_LOG = 0;
   public static final int LOG_TYPE_CSV = 1;
-
+  
   protected final LogOptionsConfig m_options;
   protected final String m_filename;
   protected final Pattern m_rowPattern;
   protected final Map<String, Integer> m_rowMatches;
   protected final List<LogFiltersConfig> m_filters;
   protected final List<LogFiltersConfig> m_details;
-  protected final SimpleDateFormat m_dateformat;
-
+  protected final DateTimeFormatter m_dateformat;
+  
   public LogParser(LogOptionsConfig options, String filename) throws ConfigurationException {
     m_options = options;
     m_filename = filename;
     m_rowPattern = options.getCompiledPattern();
-    m_dateformat = options.getSimpleDateformat();
+    m_dateformat = options.getDateTimeFormat();
     if (null == m_dateformat) {
       throw new ConfigurationException("Dateformat cannot be null");
     }
@@ -61,7 +63,7 @@ public class LogParser implements LogParserInterface {
       m_rowMatches.entrySet().forEach((Entry<String, Integer> rowEntry) -> {
         item.put(rowEntry.getKey(), rowMatch.group(rowEntry.getValue()));
       });
-
+      
       if (null != m_filters && !m_filters.isEmpty() && item.containsKey(LogObject.MATCHER_KEY_MESSAGE)) {
         String message = item.get(LogObject.MATCHER_KEY_MESSAGE);
         for (LogFiltersConfig filter : m_filters) {
@@ -91,9 +93,9 @@ public class LogParser implements LogParserInterface {
           }
         });
       }
-
+      
       L.trace(item);
-
+      
       try {
         return buildLogObject(item);
       } catch (ParseException e) {
@@ -102,15 +104,24 @@ public class LogParser implements LogParserInterface {
     }
     return null;
   }
-
+  
   protected LogObject buildLogObject(Map<String, String> item) throws ParseException {
     return new LogObject.Builder()
             .setFilename(m_filename)
-            .setDate(item.containsKey(LogObject.MATCHER_KEY_DATE) ? m_dateformat.parse(item.get(LogObject.MATCHER_KEY_DATE)) : null)
+            .setDate(item.containsKey(LogObject.MATCHER_KEY_DATE) ? toDateTime(item.get(LogObject.MATCHER_KEY_DATE)) : null)
             .setIp(item.containsKey(LogObject.MATCHER_KEY_IP) ? item.get(LogObject.MATCHER_KEY_IP) : null)
             .setMessage(item.containsKey(LogObject.MATCHER_KEY_MESSAGE) ? item.get(LogObject.MATCHER_KEY_MESSAGE) : null)
             .setSession(item.containsKey(LogObject.MATCHER_KEY_SESSION) ? item.get(LogObject.MATCHER_KEY_SESSION) : null)
             .setUser(item.containsKey(LogObject.MATCHER_KEY_USER) ? item.get(LogObject.MATCHER_KEY_USER) : null)
             .build();
+  }
+  
+  private LocalDateTime toDateTime(String date) {
+    try {
+      return LocalDateTime.parse(date, m_dateformat);
+    } catch (DateTimeParseException e) {
+      L.warn(e);
+    }
+    return null;
   }
 }

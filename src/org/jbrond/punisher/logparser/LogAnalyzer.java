@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,7 +26,7 @@ public class LogAnalyzer {
 
     @Override
     public int compare(LogObject o1, LogObject o2) {
-      return o1.getDate().compareTo(o2.getDate());
+      return o1.compareTo(o2);
     }
   }
 

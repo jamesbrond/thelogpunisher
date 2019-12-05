@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jbrond.punisher.config;
 
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -30,8 +27,12 @@ public class LogOptionsConfig {
     return m_dateformat;
   }
 
-  public SimpleDateFormat getSimpleDateformat() {
-    return new SimpleDateFormat(m_dateformat, m_locale);
+  public DateTimeFormatter getDateTimeFormat() {
+    return new DateTimeFormatterBuilder().appendPattern(m_dateformat)
+            .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+            .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+            .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+            .toFormatter(m_locale);
   }
 
   public void setDateformat(String dateformat) {

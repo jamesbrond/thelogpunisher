@@ -1,16 +1,13 @@
 package org.jbrond.punisher.logparser;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-
 import org.json.simple.JSONValue;
 
-public class LogObject {
+public class LogObject implements Comparable<LogObject> {
 
   public final static String MATCHER_KEY_DATE = "date";
   public final static String MATCHER_KEY_IP = "ip";
@@ -63,7 +60,7 @@ public class LogObject {
   public String getSession() {
     return m_session;
   }
-  
+
   public String getFilename() {
     return m_filename;
   }
@@ -80,7 +77,7 @@ public class LogObject {
         return getUser();
       case MATCHER_KEY_SESSION:
         return getSession();
-      
+
       default:
         return null;
     }
@@ -120,6 +117,19 @@ public class LogObject {
     return !filters.entrySet().stream().noneMatch((f) -> (!f.getValue().equals(get(f.getKey().toLowerCase()))));
   }
 
+  @Override
+  public int compareTo(LogObject t) {
+    LocalDateTime d1 = getDate();
+    LocalDateTime d2 = t.getDate();
+    if (null == d1) {
+      return d2 == null ? 0 : -1;
+    }
+    if (null == d2) {
+      return 1;
+    }
+    return d1.compareTo(d2);
+  }
+
   /**
    * LogObject Builder
    */
@@ -134,8 +144,8 @@ public class LogObject {
     private String m_session;
     private String m_filename;
 
-    public final Builder setDate(final Date date) {
-      m_date = null != date ? date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime() : null;
+    public final Builder setDate(final LocalDateTime date) {
+      m_date = date;
       return this;
     }
 
@@ -162,7 +172,7 @@ public class LogObject {
       m_session = session;
       return this;
     }
-    
+
     public final Builder setFilename(final String filename) {
       m_filename = filename;
       return this;
@@ -171,7 +181,7 @@ public class LogObject {
     public Builder set(final String key, final Object value) {
       switch (key) {
         case MATCHER_KEY_DATE:
-          setDate((Date) value);
+          setDate((LocalDateTime) value);
           break;
         case MATCHER_KEY_MESSAGE:
           setMessage((String) value);
