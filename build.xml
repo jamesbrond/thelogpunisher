@@ -51,9 +51,19 @@
 
   <target name="clean" description="clean up solution">
     <echo>${project.name} - clean up solution</echo>
-    <delete includeEmptyDirs="true" failonerror="false" quiet="true">
-      <fileset dir="${path.build}" includes="**/*" defaultexcludes="no" />
-    </delete>
+    <pathconvert property="exclude-lib-classpath" refid="extra.classpath" pathsep=" " dirsep="/">
+      <map from="${basedir}/${path.lib}" to="**" />
+    </pathconvert>
+    <parallel threadcount="2">
+      <delete includeEmptyDirs="true" failonerror="false" quiet="true">
+        <fileset dir="${path.build}" includes="**/*" defaultexcludes="no" />
+      </delete>
+      <delete includeEmptyDirs="true" quiet="true">
+        <fileset dir="${path.lib}" excludes="${exclude-lib-classpath}">
+          <include name="**/*.jar" />
+        </fileset>
+      </delete>
+      </parallel>
   </target>
 
   <target name="init" description="initialize the solution">
@@ -80,7 +90,8 @@
            target="${javac.target}"
            deprecation="true"
            includeAntRuntime="false"
-           debug="true">
+           debug="true"
+           encoding="UTF-8">
       <classpath refid="ivy.classpath" />
       <classpath refid="extra.classpath" />
     </javac>
