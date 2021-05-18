@@ -23,3 +23,5 @@ public class GlobalConfig {
     m_logs = logs;
   }
 }
+
+// ~@:-]

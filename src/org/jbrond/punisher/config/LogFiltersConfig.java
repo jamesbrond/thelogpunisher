@@ -28,3 +28,5 @@ public class LogFiltersConfig {
     m_matches = matches;
   }
 }
+
+// ~@:-]

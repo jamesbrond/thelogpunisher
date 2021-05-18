@@ -22,28 +22,28 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Command(name = "thepunisher",
-        mixinStandardHelpOptions = true,
-        version = "1.2.1",
-        description = "Search for the guilty and the persecution of the innocent")
+    mixinStandardHelpOptions = true,
+    version = "1.2.3",
+    description = "The search for the guilties and the persecution of the innocents")
 public class ThePunisher implements Callable<Integer> {
 
   private static final Logger L = LogManager.getLogger(ThePunisher.class.getName());
 
   @Option(names = {"-c", "--configuration"},
-          required = true,
-          arity = "1",
-          paramLabel = "FILE",
-          description = "Mandatory configuration file with instructions.")
+      required = true,
+      arity = "1",
+      paramLabel = "FILE",
+      description = "Mandatory configuration file with instructions.")
   private File o_confFile;
 
   @Option(names = {"-f", "--filter"},
-          paramLabel = "KEY=VALUE",
-          description = "Filter the input log(s) to extract only matching lines.")
+      paramLabel = "KEY=VALUE",
+      description = "Filter the input log(s) to extract only matching lines.")
   private Map<String, String> o_filters;
 
   @Option(names = {"-o", "--output"},
-          paramLabel = "filename",
-          description = "Redirect output stream (default: System.out).")
+      paramLabel = "filename",
+      description = "Redirect output stream (default: System.out).")
   private File o_output;
 
   public static void main(String... args) {
@@ -60,7 +60,7 @@ public class ThePunisher implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
-    L.info("Search for the guilty and the persecution of the innocent...");
+    L.info("The search for the guilties and the persecution of the innocents...");
     L.trace("configuration file: {}", o_confFile.getAbsolutePath());
 
     try {
@@ -92,8 +92,8 @@ public class ThePunisher implements Callable<Integer> {
     } catch (IOException e) {
       L.error(e);
       L.catching(e);
-      return 1;
     }
+    return 1;
   }
 
 }

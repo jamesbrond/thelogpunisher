@@ -19,13 +19,13 @@ import org.jbrond.punisher.config.LogOptionsConfig;
 import org.jbrond.punisher.logparser.LogObject;
 
 public class LogParser implements LogParserInterface {
-  
+
   private static final Logger L = LogManager.getLogger(LogParser.class.getName());
-  
+
   public static final List<String> LOG_TYPES = Arrays.asList(new String[]{"log", "csv"});
   public static final int LOG_TYPE_LOG = 0;
   public static final int LOG_TYPE_CSV = 1;
-  
+
   protected final LogOptionsConfig m_options;
   protected final String m_filename;
   protected final Pattern m_rowPattern;
@@ -33,7 +33,7 @@ public class LogParser implements LogParserInterface {
   protected final List<LogFiltersConfig> m_filters;
   protected final List<LogFiltersConfig> m_details;
   protected final DateTimeFormatter m_dateformat;
-  
+
   public LogParser(LogOptionsConfig options, String filename) throws ConfigurationException {
     m_options = options;
     m_filename = filename;
@@ -63,7 +63,7 @@ public class LogParser implements LogParserInterface {
       m_rowMatches.entrySet().forEach((Entry<String, Integer> rowEntry) -> {
         item.put(rowEntry.getKey(), rowMatch.group(rowEntry.getValue()));
       });
-      
+
       if (null != m_filters && !m_filters.isEmpty() && item.containsKey(LogObject.MATCHER_KEY_MESSAGE)) {
         String message = item.get(LogObject.MATCHER_KEY_MESSAGE);
         for (LogFiltersConfig filter : m_filters) {
@@ -93,9 +93,9 @@ public class LogParser implements LogParserInterface {
           }
         });
       }
-      
+
       L.trace(item);
-      
+
       try {
         return buildLogObject(item);
       } catch (ParseException e) {
@@ -104,7 +104,7 @@ public class LogParser implements LogParserInterface {
     }
     return null;
   }
-  
+
   protected LogObject buildLogObject(Map<String, String> item) throws ParseException {
     return new LogObject.Builder()
             .setFilename(m_filename)
@@ -115,7 +115,7 @@ public class LogParser implements LogParserInterface {
             .setUser(item.containsKey(LogObject.MATCHER_KEY_USER) ? item.get(LogObject.MATCHER_KEY_USER) : null)
             .build();
   }
-  
+
   private LocalDateTime toDateTime(String date) {
     try {
       return LocalDateTime.parse(date, m_dateformat);
@@ -125,3 +125,5 @@ public class LogParser implements LogParserInterface {
     return null;
   }
 }
+
+// ~@:-]

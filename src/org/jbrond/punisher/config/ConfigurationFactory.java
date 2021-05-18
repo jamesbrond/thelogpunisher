@@ -32,7 +32,7 @@ public class ConfigurationFactory {
         type = "test/yaml";
       } else {
         return null;
-      } 
+      }
     }
     L.trace("guess configuration mimetype: {}", type);
     switch (type) {
@@ -44,3 +44,5 @@ public class ConfigurationFactory {
   }
 
 }
+
+// ~@:-]

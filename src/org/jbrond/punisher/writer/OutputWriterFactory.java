@@ -2,21 +2,17 @@ package org.jbrond.punisher.writer;
 
 import java.io.File;
 import java.io.IOException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class OutputWriterFactory {
 
-  private static final Logger L = LogManager.getLogger(OutputWriterFactory.class.getName());
-
   public static OutTo build(final String filename) throws IOException {
-    return build(null == filename || filename.isEmpty() ? null : new File(filename));
+    return OutputWriterFactory.build(null == filename || filename.isEmpty() ? null : new File(filename));
   }
 
   public static OutTo build(final File file) throws IOException {
     if (null == file) {
       // if output is not specified redirect to standard output
-      return buildDefault();
+      return build();
     }
     // set other types of writer
     String filename = file.getName();
@@ -34,7 +30,9 @@ public class OutputWriterFactory {
     }
   }
 
-  public static OutTo buildDefault() {
-    return new OutToStandardOutput();
+  public static OutTo build() {
+    return new OutToStdOut();
   }
 }
+
+// ~@:-]

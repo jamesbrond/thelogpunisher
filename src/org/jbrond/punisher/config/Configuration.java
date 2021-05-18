@@ -19,3 +19,5 @@ public interface Configuration {
 
   public GlobalConfig parse(InputStream inputStream, String basePath) throws IOException;
 }
+
+// ~@:-]

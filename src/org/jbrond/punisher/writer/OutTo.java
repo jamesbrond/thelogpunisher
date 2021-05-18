@@ -8,3 +8,5 @@ public interface OutTo {
 
   public void write(Stream<LogObject> stream) throws IOException;
 }
+
+// ~@:-]

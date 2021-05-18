@@ -1,6 +1,3 @@
-/*
- * Parse Yaml file to get configuration
- */
 package org.jbrond.punisher.config;
 
 import java.io.IOException;
@@ -9,6 +6,9 @@ import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+/**
+ * Parse Yaml file to get configuration
+ */
 public class ConfigurationYaml implements Configuration {
 
   @Override
@@ -22,3 +22,5 @@ public class ConfigurationYaml implements Configuration {
     return yaml.load(inputStream);
   }
 }
+
+// ~@:-]
