@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
-<project name="thepunisher" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="TheLogPgitunisher" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <property environment="env" />
   <property file="build.properties" />
@@ -33,7 +33,7 @@
       </exec>
     </sequential>
   </macrodef>
-	
+
   <macrodef name="git-revision">
     <attribute name="property"/>
     <attribute name = "dir" default = "" />
@@ -50,7 +50,7 @@
   </macrodef>
 
   <target name="clean" description="clean up solution">
-    <echo>${project.name} - clean up solution</echo>
+    <echo>${ant.project.name} - clean up solution</echo>
     <pathconvert property="exclude-lib-classpath" refid="extra.classpath" pathsep=" " dirsep="/">
       <map from="${basedir}/${path.lib}" to="**" />
     </pathconvert>
@@ -67,7 +67,7 @@
   </target>
 
   <target name="init" description="initialize the solution">
-    <echo>${project.name} - initialize the solution</echo>
+    <echo>${ant.project.name} - initialize the solution</echo>
     <mkdir dir="${path.build}" />
     <mkdir dir="${path.build}/classes" />
     <mkdir dir="${path.lib}" />
@@ -81,7 +81,7 @@
   </target>
 
   <target name="compile" depends="init, ivy-resolve" description="compile source">
-    <echo level="info">${project.name} - compile source with ${version.java} (${tool.javac})</echo>
+    <echo>${ant.project.name} - compile source with ${version.java} (${tool.javac})</echo>
     <javac executable="${tool.javac}"
            fork="yes"
            srcdir="${path.source}"
@@ -99,23 +99,23 @@
   </target>
 
   <target name="manifest" depends="init" description="create manifest both for jar and war">
-    <echo>${project.name} - create manifest ${path.build}/MANIFEST.MF</echo>
+    <echo>${ant.project.name} - create manifest ${path.build}/MANIFEST.MF</echo>
     <manifest file="${path.build}/MANIFEST.MF">
-      <attribute name="Application-Name" value="The Punisher" />
+      <attribute name="Application-Name" value="The Log Punisher" />
       <attribute name="Permissions" value="all-permissions" />
       <attribute name="Built-By" value="${user.name}" />
       <attribute name="Built-On" value="${build-info.current-date}" />
       <attribute name="Built-At" value="${build-info.current-time}" />
       <attribute name="Java-Requirement" value="${javac.target}" />
-      <attribute name="Main-Class" value="org.jbrond.punisher.ThePunisher" />
+      <attribute name="Main-Class" value="org.jbrond.logpunisher.TheLogPunisher" />
       <attribute name="Caller-Allowable-Codebase" value="*" />
       <attribute name="Codebase" value="*" />
       <attribute name="Multi-Release" value="true" />
       <section name="${project.name}">
-        <attribute name="Specification-Title" value="${project.name}" />
+        <attribute name="Specification-Title" value="${ant.project.name}" />
         <attribute name="Specification-Version" value="${project.version}" />
         <attribute name="Specification-Vendor" value="jbrond" />
-        <attribute name="Implementation-Title" value="${project.name}" />
+        <attribute name="Implementation-Title" value="${ant.project.name}" />
         <attribute name="Implementation-Version" value="${git.revision}" />
         <attribute name="Implementation-Vendor" value="jbrond" />
       </section>
@@ -123,7 +123,7 @@
   </target>
 
   <target name="jar" depends="compile, manifest">
-    <echo>${project.name} - jar project into ${project.name}-${project.version}.jar</echo>
+    <echo>${ant.project.name} - jar project into ${project.name}-${project.version}.jar</echo>
     <pathconvert refid="ivy.classpath" property="ivy.classpath.list" pathsep="," dirsep="/">
       <map from="${basedir}/${path.lib}/" to="" />
     </pathconvert>
@@ -143,20 +143,20 @@
   </target>
 
   <target name="ivy-resolve" description="retrieve dependencies with ant-ivy" unless="ivy.resolved">
-    <echo level="info">${project.name} - retrieve dependencies with ant-ivy</echo>
+    <echo>${ant.project.name} - retrieve dependencies with ant-ivy</echo>
     <ivy:retrieve pattern="${path.lib}/[artifact]-[revision](-[classifier]).[ext]" pathid="ivy.classpath" />
     <property name="ivy.resolved" value="true" />
   </target>
 
   <target name="ivy-report" depends="ivy-resolve" description="generates a report of dependencies">
-    <echo level="info">${project.name} - generates a report of dependencies</echo>
+    <echo>${ant.project.name} - generates a report of dependencies</echo>
     <ivy:report todir="${path.build}" dot="true" />
   </target>
 
   <target name="ivy-graph"
           depends="ivy-report"
           description="generates a graph of dependencies (requires dot in your path - see http://www.graphviz.org/)">
-    <echo level="info">${project.name} - generates a graph of dependencies</echo>
+    <echo>${ant.project.name} - generates a graph of dependencies</echo>
     <property name="dot.file" value="${path.build}/com.carestreamhealth-${project.name}-default.dot" />
     <property name="ivygraph.output.file" value="${path.build}/graph.png" />
     <exec executable="dot">
@@ -165,13 +165,13 @@
   </target>
 
   <target name="ivy-clean-cache" description="clean the ivy cache">
-    <echo level="info">${project.name} - clean the ivy cache</echo>
+    <echo>${ant.project.name} - clean the ivy cache</echo>
     <delete file="${path.build}/ivy.xml.MD5" />
     <ivy:cleancache />
   </target>
-  
+
   <target name="ivy-publish" depends="ivy-resolve" description="publish this project in the ivy repository">
-    <echo>${project.name} - publish this project in the ivy repository</echo>
+    <echo>${ant.project.name} - publish this project in the ivy repository</echo>
     <ivy:publish artifactspattern="${path.release}/[artifact]-[revision].[ext]"
                  resolver="projects"
                  pubrevision="${project.version}"
@@ -180,7 +180,7 @@
                  update="true" />
     <echo>project ${project.name} released with version ${project.version}</echo>
   </target>
-  
+
   <target name="-runargs" unless="args">
     <property name="args" value="-c archive/test/test.yaml"/>
   </target>
@@ -192,7 +192,7 @@
   </target>
 
   <target name="debug" depends="jar, -runargs" description="Run the application in debug mode">
-    <nbjpdastart addressproperty="jpda.address" name="thepunisher" transport="dt_socket"/>
+    <nbjpdastart addressproperty="jpda.address" name="thelogpunisher" transport="dt_socket"/>
     <java dir="${basedir}" fork="true" jar="${path.release}/${project.name}-${project.version}.jar">
       <arg line="${args}"/>
       <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address},suspend=y"/>
