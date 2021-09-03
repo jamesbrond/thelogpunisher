@@ -1,4 +1,4 @@
-package org.jbrond.punisher.writer;
+package org.jbrond.logpunisher.writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,15 +6,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jbrond.punisher.logparser.LogObject;
+import org.jbrond.logpunisher.logparser.LogAnalyzer;
+import org.jbrond.logpunisher.logparser.LogObject;
 
 public class OutToTextFile implements OutTo {
 
   private static final Logger L = LogManager.getLogger(OutToTextFile.class.getName());
-  protected final Writer m_writer;
+  protected final Writer writer;
 
   public OutToTextFile() throws IOException {
     this(File.createTempFile("temp", null));
@@ -26,16 +26,16 @@ public class OutToTextFile implements OutTo {
   }
 
   public OutToTextFile(OutputStreamWriter os) {
-    m_writer = os;
+    writer = os;
   }
 
   @Override
-  public void write(Stream<LogObject> stream) throws IOException {
-    if (null == m_writer) {
+  public void write(LogAnalyzer analayzer) throws IOException {
+    if (null == writer) {
       throw new IOException();
     }
-    try (BufferedWriter out = new BufferedWriter(m_writer)) {
-      stream.forEach((LogObject x) -> {
+    try ( BufferedWriter out = new BufferedWriter(writer)) {
+      analayzer.get().stream().forEach((LogObject x) -> {
         try {
           out.write(x.toString());
           out.newLine();
@@ -45,7 +45,7 @@ public class OutToTextFile implements OutTo {
       });
       out.flush();
     } finally {
-      m_writer.close();
+      writer.close();
     }
   }
 

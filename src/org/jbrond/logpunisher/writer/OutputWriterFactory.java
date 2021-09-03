@@ -1,9 +1,13 @@
-package org.jbrond.punisher.writer;
+package org.jbrond.logpunisher.writer;
 
 import java.io.File;
 import java.io.IOException;
 
 public class OutputWriterFactory {
+
+  private OutputWriterFactory() {
+    throw new IllegalStateException();
+  }
 
   public static OutTo build(final String filename) throws IOException {
     return OutputWriterFactory.build(null == filename || filename.isEmpty() ? null : new File(filename));
@@ -25,6 +29,7 @@ public class OutputWriterFactory {
       case "csv":
         return new OutToCsvFile(file);
       case "txt":
+      case "log":
       default:
         return new OutToTextFile(file);
     }

@@ -1,0 +1,99 @@
+NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+Listening for transport dt_socket at address: 5050
+02-Sep-2021 12:35:49.980 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version name:   Apache Tomcat/9.0.37
+02-Sep-2021 12:35:49.993 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Jun 30 2020 20:09:49 UTC
+02-Sep-2021 12:35:49.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Server version number: 9.0.37.0
+02-Sep-2021 12:35:49.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Linux
+02-Sep-2021 12:35:49.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            4.1.12-124.50.2.el7uek.x86_64
+02-Sep-2021 12:35:49.994 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+02-Sep-2021 12:35:49.996 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             /opt/java/jdk-15
+02-Sep-2021 12:35:49.996 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           15+36-1562
+02-Sep-2021 12:35:49.996 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Oracle Corporation
+02-Sep-2021 12:35:49.996 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         /opt/apache-tomcat-9.0.37
+02-Sep-2021 12:35:49.996 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         /opt/apache-tomcat-9.0.37
+02-Sep-2021 12:35:50.052 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
+02-Sep-2021 12:35:50.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
+02-Sep-2021 12:35:50.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+02-Sep-2021 12:35:50.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=/opt/tomcat/conf/logging.properties
+02-Sep-2021 12:35:50.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+02-Sep-2021 12:35:50.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dfile.encoding=UTF-8
+02-Sep-2021 12:35:50.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.logbase=/var/log/tomcat
+02-Sep-2021 12:35:50.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dnet.sf.ehcache.skipUpdateCheck=true
+02-Sep-2021 12:35:50.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djdk.tls.ephemeralDHKeySize=2048
+02-Sep-2021 12:35:50.055 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.protocol.handler.pkgs=org.apache.catalina.webresources
+02-Sep-2021 12:35:50.058 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dorg.apache.catalina.security.SecurityListener.UMASK=0027
+02-Sep-2021 12:35:50.058 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -agentlib:jdwp=transport=dt_socket,address=0.0.0.0:5050,server=y,suspend=n
+02-Sep-2021 12:35:50.058 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xms1024m
+02-Sep-2021 12:35:50.059 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Xmx2048m
+02-Sep-2021 12:35:50.059 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dignore.endorsed.dirs=
+02-Sep-2021 12:35:50.060 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=/opt/tomcat
+02-Sep-2021 12:35:50.060 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=/opt/tomcat
+02-Sep-2021 12:35:50.060 INFO [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=/opt/tomcat/temp
+02-Sep-2021 12:35:50.060 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The Apache Tomcat Native library which allows using OpenSSL was not found on the java.library.path: [/opt/tomcat/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib]
+02-Sep-2021 12:35:50.832 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8888"]
+02-Sep-2021 12:35:50.921 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["ajp-nio-127.0.0.1-8009"]
+02-Sep-2021 12:35:50.934 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [1442] milliseconds
+02-Sep-2021 12:35:51.034 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+02-Sep-2021 12:35:51.037 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.37]
+02-Sep-2021 12:35:51.070 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/opt/apache-tomcat-9.0.37/webapps/ROOT]
+02-Sep-2021 12:35:51.775 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/opt/apache-tomcat-9.0.37/webapps/ROOT] has finished in [702] ms
+02-Sep-2021 12:35:51.775 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/opt/apache-tomcat-9.0.37/webapps/docs]
+02-Sep-2021 12:35:51.848 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/opt/apache-tomcat-9.0.37/webapps/docs] has finished in [72] ms
+02-Sep-2021 12:35:51.849 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/opt/apache-tomcat-9.0.37/webapps/examples]
+02-Sep-2021 12:35:52.421 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/opt/apache-tomcat-9.0.37/webapps/examples] has finished in [572] ms
+02-Sep-2021 12:35:52.422 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/opt/apache-tomcat-9.0.37/webapps/host-manager]
+02-Sep-2021 12:35:52.494 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/opt/apache-tomcat-9.0.37/webapps/host-manager] has finished in [70] ms
+02-Sep-2021 12:35:52.495 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/opt/apache-tomcat-9.0.37/webapps/manager]
+02-Sep-2021 12:35:52.549 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/opt/apache-tomcat-9.0.37/webapps/manager] has finished in [53] ms
+02-Sep-2021 12:35:52.550 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/opt/apache-tomcat-9.0.37/webapps/dev]
+02-Sep-2021 12:36:01.701 WARNING [main] org.apache.catalina.startup.ContextConfig.validateSecurityRoles Security role name [manager-gui] used in an <auth-constraint> without being defined in a <security-role>
+02-Sep-2021 12:36:02.049 INFO [main] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+02-Sep-2021 12:36:07.138 INFO [main] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.util.LocalStrings', returnNull=true
+02-Sep-2021 12:36:07.140 INFO [main] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.action.ActionResources', returnNull=true
+02-Sep-2021 12:36:12.400 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/opt/apache-tomcat-9.0.37/webapps/dev] has finished in [19,849] ms
+02-Sep-2021 12:36:12.401 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deploying web application directory [/opt/apache-tomcat-9.0.37/webapps/kiosk]
+02-Sep-2021 12:36:13.912 INFO [main] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+02-Sep-2021 12:36:16.180 INFO [main] org.apache.catalina.startup.HostConfig.deployDirectory Deployment of web application directory [/opt/apache-tomcat-9.0.37/webapps/kiosk] has finished in [3,780] ms
+02-Sep-2021 12:36:16.190 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8888"]
+02-Sep-2021 12:36:16.239 INFO [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["ajp-nio-127.0.0.1-8009"]
+02-Sep-2021 12:36:16.243 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [25308] milliseconds
+02-Sep-2021 12:36:57.042 INFO [Thread-5] oracle.dbtools.db.OracleUtil$2.call Prepared:
+declare 
+  l_theCursor     integer default dbms_sql.open_cursor;
+  l_status        integer default -1 ;
+  insqlsix        VARCHAR2(6);
+begin
+   insqlsix:=upper(substr(ltrim(?),1,6));
+   -- Check to see if the statement is a DML statement. Ignore DDL
+   -- (DBMS_SQL.PARSE will execute DDL on the parse)
+   if ((insqlsix  in ( 'INSERT', 'UPDATE', 'DELETE', 'SELECT') )
+     OR(substr(insqlsix,1,5)='MERGE') 
+     OR(substr(insqlsix,1,4)='WITH') OR (substr(insqlsix,1,1)='(')) then 
+     begin 
+		l_status := -2; 
+        dbms_sql.parse(  l_theCursor, ?, dbms_sql.native ); 
+     exception 
+          when others then 
+				l_status := dbms_sql.last_error_position;
+          end; 
+          dbms_sql.close_cursor( l_theCursor );
+     end if;
+     ? := l_status;
+end;					
+					
+02-Sep-2021 12:41:21.812 INFO [ajp-nio-127.0.0.1-8009-exec-9] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.bean.LocalStrings', returnNull=true
+02-Sep-2021 12:41:21.821 INFO [ajp-nio-127.0.0.1-8009-exec-9] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.util.LocalStrings', returnNull=true
+02-Sep-2021 12:41:21.825 INFO [ajp-nio-127.0.0.1-8009-exec-9] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.logic.LocalStrings', returnNull=true
+02-Sep-2021 12:41:21.825 INFO [ajp-nio-127.0.0.1-8009-exec-9] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.logic.LocalStrings', returnNull=true
+02-Sep-2021 12:41:21.833 INFO [ajp-nio-127.0.0.1-8009-exec-9] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.html.LocalStrings', returnNull=true
+02-Sep-2021 12:41:21.846 INFO [ajp-nio-127.0.0.1-8009-exec-9] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.html.LocalStrings', returnNull=true
+02-Sep-2021 12:41:21.846 INFO [ajp-nio-127.0.0.1-8009-exec-9] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.html.LocalStrings', returnNull=true
+02-Sep-2021 12:41:27.869 INFO [ajp-nio-127.0.0.1-8009-exec-1] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.bean.LocalStrings', returnNull=true
+02-Sep-2021 12:41:28.358 INFO [ajp-nio-127.0.0.1-8009-exec-1] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.html.LocalStrings', returnNull=true
+02-Sep-2021 12:41:30.694 INFO [ajp-nio-127.0.0.1-8009-exec-9] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.bean.LocalStrings', returnNull=true
+02-Sep-2021 12:41:43.056 INFO [ajp-nio-127.0.0.1-8009-exec-1] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.html.LocalStrings', returnNull=true
+02-Sep-2021 12:41:43.196 INFO [ajp-nio-127.0.0.1-8009-exec-1] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.html.LocalStrings', returnNull=true
+02-Sep-2021 12:41:43.272 INFO [ajp-nio-127.0.0.1-8009-exec-1] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.html.LocalStrings', returnNull=true
+02-Sep-2021 12:41:43.382 INFO [ajp-nio-127.0.0.1-8009-exec-1] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.html.LocalStrings', returnNull=true
+02-Sep-2021 12:43:14.942 INFO [ajp-nio-127.0.0.1-8009-exec-2] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.logic.LocalStrings', returnNull=true
+02-Sep-2021 12:43:14.986 INFO [ajp-nio-127.0.0.1-8009-exec-2] org.apache.struts.util.PropertyMessageResources.<init> Initializing, config='org.apache.struts.taglib.html.LocalStrings', returnNull=true

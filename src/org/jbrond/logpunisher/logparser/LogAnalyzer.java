@@ -1,4 +1,4 @@
-package org.jbrond.punisher.logparser;
+package org.jbrond.logpunisher.logparser;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,16 +8,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.naming.ConfigurationException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jbrond.punisher.config.LogOptionsConfig;
-import org.jbrond.punisher.logparser.parser.LogParser;
-import org.jbrond.punisher.logparser.parser.LogParserCSV;
-import org.jbrond.punisher.logparser.parser.LogParserInterface;
+import org.jbrond.logpunisher.config.LogOptionsConfig;
+import org.jbrond.logpunisher.logparser.parser.LogParser;
+import org.jbrond.logpunisher.logparser.parser.LogParserCSV;
+import org.jbrond.logpunisher.logparser.parser.LogParserInterface;
 
 public class LogAnalyzer {
 
@@ -31,10 +32,10 @@ public class LogAnalyzer {
 
   private static final Logger L = LogManager.getLogger(LogAnalyzer.class.getName());
 
-  private final List<LogObject> m_logCollection;
+  private final List<LogObject> logCollection;
 
   public LogAnalyzer() {
-    m_logCollection = new ArrayList<>();
+    logCollection = new ArrayList<>();
   }
 
   public List<LogObject> parse(Path file, String type, LogOptionsConfig options) throws IOException, ConfigurationException {
@@ -55,7 +56,9 @@ public class LogAnalyzer {
         throw new ConfigurationException("Unknown log type");
     }
 
-    return Files.lines(file).map(parser::match).filter(x -> x != null).collect(Collectors.toList());
+    try (Stream<String> input = Files.lines(file))  {
+      return input.map(parser::match).filter(Objects::nonNull).collect(Collectors.toList());
+    }
   }
 
   public LogAnalyzer add(String fileName, String type, LogOptionsConfig options) {
@@ -64,7 +67,7 @@ public class LogAnalyzer {
 
   public LogAnalyzer add(Path file, String type, LogOptionsConfig options) {
     try {
-      m_logCollection.addAll(parse(file, type, options));
+      logCollection.addAll(parse(file, type, options));
     } catch (NullPointerException | IOException | ConfigurationException e) {
       L.error(e);
       L.catching(e);
@@ -73,16 +76,16 @@ public class LogAnalyzer {
   }
 
   public LogAnalyzer sort() {
-    Collections.sort(m_logCollection, new LogObjectComparator());
+    Collections.sort(logCollection, new LogObjectComparator());
     return this;
   }
 
   public Stream<LogObject> stream() {
-    return m_logCollection.stream();
+    return logCollection.stream();
   }
 
   public List<LogObject> get() {
-    return m_logCollection;
+    return logCollection;
   }
 }
 

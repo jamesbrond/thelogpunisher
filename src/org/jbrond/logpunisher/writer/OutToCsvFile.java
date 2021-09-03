@@ -1,12 +1,14 @@
-package org.jbrond.punisher.writer;
+package org.jbrond.logpunisher.writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jbrond.punisher.logparser.LogObject;
+import org.jbrond.logpunisher.logparser.LogAnalyzer;
+import org.jbrond.logpunisher.logparser.LogObject;
 
 public class OutToCsvFile extends OutToTextFile implements OutTo {
 
@@ -20,45 +22,44 @@ public class OutToCsvFile extends OutToTextFile implements OutTo {
   }
 
   @Override
-  public void write(Stream<LogObject> stream) throws IOException {
-    if (null == m_writer) {
+  public void write(LogAnalyzer analayzer) throws IOException {
+    if (null == writer) {
       throw new IOException();
     }
-    try (BufferedWriter out = new BufferedWriter(m_writer)) {
-      out.append(CSV_DEL).append("Date").append(CSV_DEL)
-              .append(CSV_SEP)
-              .append(CSV_DEL).append("Message").append(CSV_DEL)
-              .append(CSV_SEP)
-              .append(CSV_DEL).append("IP").append(CSV_DEL)
-              .append(CSV_SEP)
-              .append(CSV_DEL).append("User").append(CSV_DEL)
-              .append(CSV_SEP)
-              .append(CSV_DEL).append("Session").append(CSV_DEL)
-              .append(CSV_SEP)
-              .append(CSV_DEL).append("Log file").append(CSV_DEL);
-      out.newLine();
+    List<LogObject> collection = analayzer.get();
+    if (collection.size() > 0) {
+      try ( BufferedWriter out = new BufferedWriter(writer)) {
+        StringBuilder buffer = new StringBuilder();
+        Set<String> keys = collection.get(0).keySet();
 
-      stream.forEach((LogObject x) -> {
-        try {
-          out.append(CSV_DEL).append(x.getFormatDate()).append(CSV_DEL)
-                  .append(CSV_SEP)
-                  .append(CSV_DEL).append(x.getMessage()).append(CSV_DEL)
-                  .append(CSV_SEP)
-                  .append(CSV_DEL).append(x.getIp()).append(CSV_DEL)
-                  .append(CSV_SEP)
-                  .append(CSV_DEL).append(x.getUser()).append(CSV_DEL)
-                  .append(CSV_SEP)
-                  .append(CSV_DEL).append(x.getSession()).append(CSV_DEL)
-                  .append(CSV_SEP)
-                  .append(CSV_DEL).append(x.getFilename()).append(CSV_DEL);
-          out.newLine();
-        } catch (IOException e) {
-          L.warn(e);
-        }
-      });
-      out.flush();
-    } finally {
-      m_writer.close();
+        buffer.append(CSV_DEL).append("Date").append(CSV_DEL)
+            .append(CSV_SEP)
+            .append(CSV_DEL).append("Message").append(CSV_DEL);
+        keys.stream().forEach(k -> buffer.append(CSV_SEP).append(CSV_DEL).append(k).append(CSV_DEL));
+        buffer.append(CSV_SEP)
+            .append(CSV_DEL).append("Log file").append(CSV_DEL);
+        out.append(buffer);
+        out.newLine();
+
+        collection.stream().forEach((LogObject x) -> {
+          try {
+            StringBuilder b = new StringBuilder();
+            b.append(CSV_DEL).append(x.getFormatDate()).append(CSV_DEL)
+                .append(CSV_SEP)
+                .append(CSV_DEL).append(x.getMessage()).append(CSV_DEL);
+            keys.stream().forEach(k -> buffer.append(CSV_SEP).append(CSV_DEL).append(x.get(k)).append(CSV_DEL));
+            b.append(CSV_SEP)
+                .append(CSV_DEL).append(x.getFilename()).append(CSV_DEL);
+            out.append(b);
+            out.newLine();
+          } catch (IOException e) {
+            L.warn(e);
+          }
+        });
+        out.flush();
+      } finally {
+        writer.close();
+      }
     }
   }
 

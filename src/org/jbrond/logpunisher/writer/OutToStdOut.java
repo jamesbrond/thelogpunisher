@@ -1,4 +1,4 @@
-package org.jbrond.punisher.writer;
+package org.jbrond.logpunisher.writer;
 
 import java.io.OutputStreamWriter;
 

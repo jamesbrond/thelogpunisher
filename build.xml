@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
-<project name="TheLogPgitunisher" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="TheLogPunisher" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <property environment="env" />
   <property file="build.properties" />
@@ -182,7 +182,7 @@
   </target>
 
   <target name="-runargs" unless="args">
-    <property name="args" value="-c archive/test/test.yaml"/>
+    <property name="args" value="-c example/test/test.yml -o log/full.log"/>
   </target>
 
   <target name="run" depends="jar, -runargs" description="Run the application">

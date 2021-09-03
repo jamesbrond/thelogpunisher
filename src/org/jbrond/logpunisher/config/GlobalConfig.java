@@ -1,26 +1,26 @@
-package org.jbrond.punisher.config;
+package org.jbrond.logpunisher.config;
 
 import java.util.List;
 
 public class GlobalConfig {
 
-  private String m_name;
-  private List<LogConfig> m_logs;
+  private String name;
+  private List<LogConfig> logs;
 
   public void setName(String name) {
-    m_name = name;
+    this.name = name;
   }
 
   public String getName() {
-    return m_name;
+    return name;
   }
 
   public List<LogConfig> getLogs() {
-    return m_logs;
+    return logs;
   }
 
   public void setLogs(List<LogConfig> logs) {
-    m_logs = logs;
+    this.logs = logs;
   }
 }
 

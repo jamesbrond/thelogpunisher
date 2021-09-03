@@ -1,0 +1,3 @@
+"LBOOKNR";"LID";"LUSER";"LDATETIME";"LTRANS";"LREQNR";"PROGRAM";"HOST";"OSUSERID";"SESSIONID";"DBCONNECTEDIP";"WEBCLIENTIP"
+"";"";"RIS       ";"02/09/2021 12:41:27";"Logged onto the Web Module";"";"JDBC Thin Client";"oradev";"root";"2021566";"172.16.69.235";"172.16.69.1"
+"50057056";"12345       ";"RIS       ";"02/09/2021 12:43:14";"Web Book: (02.09.2021, 12.48, CAMERETTA)";"50056776";"JDBC Thin Client";"oradev";"root";"2021804";"172.16.69.235";""

@@ -1,12 +1,11 @@
-package org.jbrond.punisher.writer;
+package org.jbrond.logpunisher.writer;
 
 import java.io.IOException;
-import java.util.stream.Stream;
-import org.jbrond.punisher.logparser.LogObject;
+import org.jbrond.logpunisher.logparser.LogAnalyzer;
 
 public interface OutTo {
 
-  public void write(Stream<LogObject> stream) throws IOException;
+  public void write(LogAnalyzer analayzer) throws IOException;
 }
 
 // ~@:-]

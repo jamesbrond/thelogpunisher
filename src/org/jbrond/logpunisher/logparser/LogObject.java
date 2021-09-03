@@ -1,102 +1,70 @@
-package org.jbrond.punisher.logparser;
+package org.jbrond.logpunisher.logparser;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.Set;
 import org.json.simple.JSONValue;
 
 public class LogObject implements Comparable<LogObject> {
 
-  public final static String MATCHER_KEY_DATE = "date";
-  public final static String MATCHER_KEY_IP = "ip";
-  public final static String MATCHER_KEY_MESSAGE = "message";
-  public final static String MATCHER_KEY_SESSION = "session";
-  public final static String MATCHER_KEY_USER = "user";
+  public static final String MATCHER_KEY_DATE = "date";
+  public static final String MATCHER_KEY_MESSAGE = "message";
 
-  private final static String OUTPUT_DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+  private static final String OUTPUT_DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
 
-  private final DateTimeFormatter m_dateformat;
+  private final DateTimeFormatter dateFormatter;
 
-  private final String m_filename;
-  private final LocalDateTime m_date;
-  private final String m_ip;
-  private final String m_message;
-  private final String m_user;
-  private final String m_session;
+  private final String filename;
+  private final LocalDateTime date;
+  private final String message;
+  private final Map<String, String> logRecord;
 
-  private LogObject(Builder builder) {
-    m_dateformat = DateTimeFormatter.ofPattern(OUTPUT_DATE_FORMAT);
+  private LogObject(LogObjectBuilder builder) {
+    dateFormatter = DateTimeFormatter.ofPattern(OUTPUT_DATE_FORMAT);
+    logRecord = builder.logRecord;
 
-    m_date = builder.m_date;
-    m_ip = builder.m_ip;
-    m_message = builder.m_message;
-    m_user = builder.m_user;
-    m_session = builder.m_session;
-    m_filename = builder.m_filename;
+    date = builder.date;
+    message = builder.message;
+    filename = builder.filename;
   }
 
   public LocalDateTime getDate() {
-    return m_date;
+    return date;
   }
 
   public String getFormatDate() {
-    return m_date != null ? m_date.format(m_dateformat) : null;
+    return date != null ? date.format(dateFormatter) : null;
   }
 
   public String getMessage() {
-    return m_message;
-  }
-
-  public String getIp() {
-    return m_ip;
-  }
-
-  public String getUser() {
-    return null != m_user ? m_user.toUpperCase() : null;
-  }
-
-  public String getSession() {
-    return m_session;
+    return message;
   }
 
   public String getFilename() {
-    return m_filename;
+    return filename;
   }
 
   public String get(String key) {
-    switch (key) {
-      case MATCHER_KEY_DATE:
-        return getFormatDate();
-      case MATCHER_KEY_MESSAGE:
-        return getMessage();
-      case MATCHER_KEY_IP:
-        return getIp();
-      case MATCHER_KEY_USER:
-        return getUser();
-      case MATCHER_KEY_SESSION:
-        return getSession();
+    return logRecord.get(key);
+  }
 
-      default:
-        return null;
-    }
+  public int size() {
+    return logRecord.size();
+  }
+
+  public Set<String> keySet() {
+    return logRecord.keySet();
   }
 
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder()
-            .append(getFormatDate())
-            .append(' ').append(getMessage());
-    if (null != m_ip) {
-      str.append(' ').append("from ").append(getIp());
-    }
-    if (null != m_user) {
-      str.append(' ').append("by ").append(getUser());
-    }
-    if (null != m_session) {
-      str.append(' ').append("JSESSIONID: ").append(getSession());
-    }
+        .append(getFormatDate())
+        .append(' ').append(getMessage())
+        .append("; ");
+    logRecord.entrySet().stream().forEach(x -> str.append(x.getKey()).append(": ").append(x.getValue()).append("; "));
     str.append(' ').append('[').append(getFilename()).append(']');
 
     return str.toString();
@@ -104,17 +72,14 @@ public class LogObject implements Comparable<LogObject> {
 
   public String toJSON() {
     Map<String, String> m = new HashMap<>();
-    m.put("date", getFormatDate());
-    m.put("ip", getIp());
-    m.put("message", getMessage());
-    m.put("user", getUser());
-    m.put("session", getSession());
-    m.put("filename", getFilename());
+    m.put(MATCHER_KEY_DATE, getFormatDate());
+    m.put(MATCHER_KEY_MESSAGE, getMessage());
+    logRecord.entrySet().stream().forEach(x -> m.put(x.getKey(), get(x.getKey())));
     return JSONValue.toJSONString(m);
   }
 
   public boolean filter(Map<String, String> filters) {
-    return !filters.entrySet().stream().noneMatch((f) -> (!f.getValue().equals(get(f.getKey().toLowerCase()))));
+    return filters.entrySet().stream().noneMatch(f -> (!f.getValue().equals(get(f.getKey().toLowerCase()))));
   }
 
   @Override
@@ -130,70 +95,56 @@ public class LogObject implements Comparable<LogObject> {
     return d1.compareTo(d2);
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+
+    if (this.getClass() != obj.getClass()) {
+      return false;
+    }
+
+    LocalDateTime d1 = getDate();
+    LocalDateTime d2 = ((LogObject) obj).getDate();
+    return null != d1 && null != d2 && d1.isEqual(d2);
+  }
+
+  @Override
+  public int hashCode() {
+    LocalDateTime d1 = getDate();
+    return d1.hashCode();
+  }
+
   /**
    * LogObject Builder
    */
-  public static class Builder {
-    private static final Pattern VALID_IP_PATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
+  public static class LogObjectBuilder {
 
-    private LocalDateTime m_date;
-    private String m_ip;
-    private String m_message;
-    private String m_user;
-    private String m_session;
-    private String m_filename;
+    private final Map<String, String> logRecord = new HashMap<>();
 
-    public final Builder setDate(final LocalDateTime date) {
-      m_date = date;
+    private LocalDateTime date;
+    private String message;
+    private String filename;
+
+    public final LogObjectBuilder setDate(final LocalDateTime date) {
+      this.date = date;
       return this;
     }
 
-    public final Builder setIp(final String ip) {
-      if (null == ip) {
-        m_ip = null;
-      } else {
-        m_ip = VALID_IP_PATTERN.matcher(ip).matches() ? ip : null;
-      }
+    public final LogObjectBuilder setMessage(final String message) {
+      this.message = message;
       return this;
     }
 
-    public final Builder setMessage(final String message) {
-      m_message = message;
+    public final LogObjectBuilder setFilename(final String filename) {
+      this.filename = filename;
       return this;
     }
 
-    public final Builder setUser(final String user) {
-      m_user = user;
-      return this;
-    }
-
-    public final Builder setSession(final String session) {
-      m_session = session;
-      return this;
-    }
-
-    public final Builder setFilename(final String filename) {
-      m_filename = filename;
-      return this;
-    }
-
-    public Builder set(final String key, final Object value) {
-      switch (key) {
-        case MATCHER_KEY_DATE:
-          setDate((LocalDateTime) value);
-          break;
-        case MATCHER_KEY_MESSAGE:
-          setMessage((String) value);
-          break;
-        case MATCHER_KEY_IP:
-          setIp((String) value);
-          break;
-        case MATCHER_KEY_USER:
-          setUser((String) value);
-          break;
-        case MATCHER_KEY_SESSION:
-          setSession((String) value);
-          break;
+    public LogObjectBuilder set(final String key, final String value) {
+      if (null != key) {
+        logRecord.put(key.toLowerCase(), value);
       }
       return this;
     }

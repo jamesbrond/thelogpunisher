@@ -1,4 +1,4 @@
-package org.jbrond.punisher.logparser.parser;
+package org.jbrond.logpunisher.logparser.parser;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import javax.naming.ConfigurationException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jbrond.punisher.config.LogOptionsConfig;
-import org.jbrond.punisher.logparser.LogObject;
+import org.jbrond.logpunisher.config.LogOptionsConfig;
+import org.jbrond.logpunisher.logparser.LogObject;
 
 public class LogParserCSV extends LogParser implements LogParserInterface {
 
@@ -20,25 +20,23 @@ public class LogParserCSV extends LogParser implements LogParserInterface {
   private static final char DEFAULT_SEPARATOR = ',';
   private static final char DEFAULT_QUOTE = '"';
 
-  private final char m_separator;
-  private final char m_quote;
+  private final char separator;
+  private final char quote;
 
   public LogParserCSV(LogOptionsConfig options, String filename) throws ConfigurationException {
     super(options, filename);
-    String separator = options.getSeparator();
-    m_separator = separator == null || separator.isEmpty() ? DEFAULT_SEPARATOR : separator.charAt(0);
-    String quote = options.getQuote();
-    m_quote = quote == null || quote.isEmpty() ? DEFAULT_QUOTE : quote.charAt(0);
+    String sep = options.getSeparator();
+    this.separator = sep == null || sep.isEmpty() ? DEFAULT_SEPARATOR : sep.charAt(0);
+    String q = options.getQuote();
+    this.quote = q == null || q.isEmpty() ? DEFAULT_QUOTE : q.charAt(0);
   }
 
   @Override
   public LogObject match(String line) {
-    List<String> csvItems = parseLine(line, m_separator, m_quote);
-    if (null != csvItems && !csvItems.isEmpty()) {
+    List<String> csvItems = parseLine(line, separator, quote);
+    if (!csvItems.isEmpty()) {
       Map<String, String> collectedItem = new HashMap<>();
-      m_rowMatches.entrySet().forEach((Entry<String, Integer> rowEntry) -> {
-        collectedItem.put(rowEntry.getKey(), csvItems.get(rowEntry.getValue()));
-      });
+      rowMatches.entrySet().forEach((Entry<String, Integer> rowEntry) -> collectedItem.put(rowEntry.getKey(), csvItems.get(rowEntry.getValue())));
       try {
         return buildLogObject(collectedItem);
       } catch (ParseException e) {

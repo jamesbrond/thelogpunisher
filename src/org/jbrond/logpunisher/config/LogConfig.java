@@ -1,33 +1,33 @@
-package org.jbrond.punisher.config;
+package org.jbrond.logpunisher.config;
 
 public class LogConfig {
 
-  private String m_type;
-  private String m_file;
-  private LogOptionsConfig m_options;
+  private String type;
+  private String file;
+  private LogOptionsConfig options;
 
   public void setType(String type) {
-    m_type = type;
+    this.type = type;
   }
 
   public String getType() {
-    return m_type;
+    return type;
   }
 
   public void setFile(String file) {
-    m_file = file;
+    this.file = file;
   }
 
   public String getFile() {
-    return m_file;
+    return file;
   }
 
   public LogOptionsConfig getOptions() {
-    return m_options;
+    return options;
   }
 
   public void setOptions(LogOptionsConfig options) {
-    m_options = options;
+    this.options = options;
   }
 
 }

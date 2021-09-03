@@ -1,4 +1,4 @@
-package org.jbrond.punisher.config;
+package org.jbrond.logpunisher.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 /**
- * Parse Yaml file to get configuration
+ * Parse YAML file to get configuration
  */
 public class ConfigurationYaml implements Configuration {
 
