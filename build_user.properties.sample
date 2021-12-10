@@ -3,3 +3,8 @@ tool.javac=${path.java_home}/bin/javac.exe
 jarjarlinks.jar.file=${env.ANT_HOME}/lib/jarjar-1.4.jar
 contrib.jar.file=${env.ANT_HOME}/lib/ant-contrib-1.0b3.jar
 ivy.jar.file=${env.ANT_HOME}/lib/ivy-2.5.0.jar
+
+proxy.host = 192.168.5.2
+proxy.port = 80
+proxy.ssl.port = 443
+proxy.no_proxy=

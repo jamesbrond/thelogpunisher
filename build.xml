@@ -48,6 +48,12 @@
       </git>
     </sequential>
   </macrodef>
+  
+  <target name="proxy">
+    <setproxy proxyhost="${proxy.host}"
+        proxyport="${proxy.ssl.port}"
+        nonproxyhosts="${proxy.no_proxy}"/>
+  </target>
 
   <target name="clean" description="clean up solution">
     <echo>${ant.project.name} - clean up solution</echo>
@@ -142,7 +148,7 @@
     </jarjar>
   </target>
 
-  <target name="ivy-resolve" description="retrieve dependencies with ant-ivy" unless="ivy.resolved">
+  <target name="ivy-resolve" description="retrieve dependencies with ant-ivy" unless="ivy.resolved" depends="proxy">
     <echo>${ant.project.name} - retrieve dependencies with ant-ivy</echo>
     <ivy:retrieve pattern="${path.lib}/[artifact]-[revision](-[classifier]).[ext]" pathid="ivy.classpath" />
     <property name="ivy.resolved" value="true" />

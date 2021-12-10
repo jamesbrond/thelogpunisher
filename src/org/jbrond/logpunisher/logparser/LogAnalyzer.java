@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,7 +33,7 @@ public class LogAnalyzer {
 
   private static final Logger L = LogManager.getLogger(LogAnalyzer.class.getName());
 
-  private final List<LogObject> logCollection;
+  private List<LogObject> logCollection;
 
   public LogAnalyzer() {
     logCollection = new ArrayList<>();
@@ -47,9 +48,11 @@ public class LogAnalyzer {
     String filename = file.getFileName().toString();
     switch (t) {
       case LogParser.LOG_TYPE_LOG:
+        L.debug("{} is LOG file", filename);
         parser = new LogParser(options, filename);
         break;
       case LogParser.LOG_TYPE_CSV:
+        L.debug("{} is CSV file", filename);
         parser = new LogParserCSV(options, filename);
         break;
       default:
@@ -67,7 +70,9 @@ public class LogAnalyzer {
 
   public LogAnalyzer add(Path file, String type, LogOptionsConfig options) {
     try {
-      logCollection.addAll(parse(file, type, options));
+      List<LogObject> items = parse(file, type, options);
+      L.debug("found {} items", items.size());
+      logCollection.addAll(items);
     } catch (NullPointerException | IOException | ConfigurationException e) {
       L.error(e);
       L.catching(e);
@@ -77,6 +82,11 @@ public class LogAnalyzer {
 
   public LogAnalyzer sort() {
     Collections.sort(logCollection, new LogObjectComparator());
+    return this;
+  }
+
+  public LogAnalyzer filter(Map<String, String> filters) {
+    logCollection = logCollection.stream().filter(x -> x.filter(filters)).collect(Collectors.toList());
     return this;
   }
 

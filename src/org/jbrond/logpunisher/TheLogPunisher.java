@@ -70,7 +70,7 @@ public class TheLogPunisher implements Callable<Integer> {
       LogAnalyzer anal = new LogAnalyzer();
       List<LogConfig> sessions = conf.getLogs();
       L.debug("Configuration file contains {} sections", sessions.size());
-      sessions.stream().parallel().forEach((LogConfig l) -> {
+      sessions.stream().forEach((LogConfig l) -> {
         Path path = new File(basePath, l.getFile()).toPath();
         L.debug("Section {} (file: {})", l.getType(), path.toString());
         anal.add(path, l.getType(), l.getOptions());
@@ -82,10 +82,10 @@ public class TheLogPunisher implements Callable<Integer> {
       } else {
         // apply filters
         L.debug("filter by: {}", filters);
-        anal.sort().stream().filter(x -> x.filter(filters));
+        anal.sort().filter(filters);
       }
 
-      OutputWriterFactory.build(output).write(anal);
+      OutputWriterFactory.build(output, conf.getFormat()).write(anal);
       exitStatus = 0;
     } catch (IOException e) {
       L.error(e);

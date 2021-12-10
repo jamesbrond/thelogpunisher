@@ -4,8 +4,8 @@ import java.io.OutputStreamWriter;
 
 public class OutToStdOut extends OutToTextFile implements OutTo {
 
-  public OutToStdOut()  {
-    super(new OutputStreamWriter(System.out));
+  public OutToStdOut(String format)  {
+    super(new OutputStreamWriter(System.out), format);
   }
 }
 

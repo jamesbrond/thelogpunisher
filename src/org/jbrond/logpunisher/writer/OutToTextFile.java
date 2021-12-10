@@ -15,18 +15,20 @@ public class OutToTextFile implements OutTo {
 
   private static final Logger L = LogManager.getLogger(OutToTextFile.class.getName());
   protected final Writer writer;
+  protected final String formatString;
 
   public OutToTextFile() throws IOException {
-    this(File.createTempFile("temp", null));
+    this(File.createTempFile("temp", null), null);
   }
 
-  public OutToTextFile(File file) throws IOException {
-    this(new FileWriter(file));
+  public OutToTextFile(File file, String format) throws IOException {
+    this(new FileWriter(file), format);
     L.info("Output file {}", file.getAbsolutePath());
   }
 
-  public OutToTextFile(OutputStreamWriter os) {
+  public OutToTextFile(OutputStreamWriter os, String format) {
     writer = os;
+    formatString = format;
   }
 
   @Override
@@ -37,7 +39,7 @@ public class OutToTextFile implements OutTo {
     try ( BufferedWriter out = new BufferedWriter(writer)) {
       analayzer.get().stream().forEach((LogObject x) -> {
         try {
-          out.write(x.toString());
+          out.write(x.format(formatString));
           out.newLine();
         } catch (IOException e) {
           L.warn(e);

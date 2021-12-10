@@ -17,8 +17,8 @@ public class OutToCsvFile extends OutToTextFile implements OutTo {
 
   private static final Logger L = LogManager.getLogger(OutToCsvFile.class.getName());
 
-  public OutToCsvFile(File file) throws IOException {
-    super(file);
+  public OutToCsvFile(File file, String format) throws IOException {
+    super(file, format);
   }
 
   @Override
@@ -44,7 +44,7 @@ public class OutToCsvFile extends OutToTextFile implements OutTo {
         collection.stream().forEach((LogObject x) -> {
           try {
             StringBuilder b = new StringBuilder();
-            b.append(CSV_DEL).append(x.getFormatDate()).append(CSV_DEL)
+            b.append(CSV_DEL).append(x.getFormatDate(x.getDate())).append(CSV_DEL)
                 .append(CSV_SEP)
                 .append(CSV_DEL).append(x.getMessage()).append(CSV_DEL);
             keys.stream().forEach(k -> buffer.append(CSV_SEP).append(CSV_DEL).append(x.get(k)).append(CSV_DEL));

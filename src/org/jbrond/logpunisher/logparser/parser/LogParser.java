@@ -78,8 +78,6 @@ public class LogParser implements LogParserInterface {
       item.putAll(matchDetails(item.get(LogObject.MATCHER_KEY_MESSAGE)));
     }
 
-    L.trace(item);
-
     try {
       return buildLogObject(item);
     } catch (ParseException e) {
@@ -90,11 +88,10 @@ public class LogParser implements LogParserInterface {
 
   protected LogObject buildLogObject(Map<String, String> item) throws ParseException {
     LogObject.LogObjectBuilder objBuilder = new LogObject.LogObjectBuilder()
-        .setFilename(filename)
-        .setDate(item.containsKey(LogObject.MATCHER_KEY_DATE) ? toDateTime(item.get(LogObject.MATCHER_KEY_DATE)) : null)
-        .setMessage(item.containsKey(LogObject.MATCHER_KEY_MESSAGE) ? item.get(LogObject.MATCHER_KEY_MESSAGE) : null);
-
+        .setFilename(filename);
     item.entrySet().stream().forEach(x -> objBuilder.set(x.getKey(), x.getValue()));
+    objBuilder.setDate(item.containsKey(LogObject.MATCHER_KEY_DATE) ? toDateTime(item.get(LogObject.MATCHER_KEY_DATE)) : null);
+
     return objBuilder.build();
   }
 
