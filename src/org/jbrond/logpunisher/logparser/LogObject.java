@@ -13,7 +13,7 @@ public class LogObject implements Comparable<LogObject> {
   public static final String MATCHER_KEY_MESSAGE = "message";
   public static final String MATCHER_KEY_FILENAME = "filename";
 
-  private static final String OUTPUT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  private static final String OUTPUT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
   private final DateTimeFormatter dateFormatter;
 
