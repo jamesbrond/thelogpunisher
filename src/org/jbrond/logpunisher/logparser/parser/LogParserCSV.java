@@ -26,9 +26,9 @@ public class LogParserCSV extends LogParser implements LogParserInterface {
   public LogParserCSV(LogOptionsConfig options, String filename) throws ConfigurationException {
     super(options, filename);
     String sep = options.getSeparator();
-    this.separator = sep == null || sep.isEmpty() ? DEFAULT_SEPARATOR : sep.charAt(0);
+    separator = sep == null || sep.isEmpty() ? DEFAULT_SEPARATOR : sep.charAt(0);
     String q = options.getQuote();
-    this.quote = q == null || q.isEmpty() ? DEFAULT_QUOTE : q.charAt(0);
+    quote = q == null || q.isEmpty() ? DEFAULT_QUOTE : q.charAt(0);
   }
 
   @Override
@@ -46,11 +46,11 @@ public class LogParserCSV extends LogParser implements LogParserInterface {
     return null;
   }
 
-  private List<String> parseLine(String cvsLine, char separators, char customQuote) {
+  private List<String> parseLine(String csvLine, char separators, char customQuote) {
     List<String> result = new ArrayList<>();
 
-    //if empty, return!
-    if (null == cvsLine || cvsLine.isEmpty()) {
+    // if empty, return!
+    if (null == csvLine || csvLine.isEmpty()) {
       return result;
     }
 
@@ -59,7 +59,7 @@ public class LogParserCSV extends LogParser implements LogParserInterface {
     boolean startCollectChar = false;
     boolean doubleQuotesInColumn = false;
 
-    char[] chars = cvsLine.toCharArray();
+    char[] chars = csvLine.toCharArray();
 
     for (char ch : chars) {
       if (inQuotes) {

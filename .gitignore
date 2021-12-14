@@ -1,5 +1,6 @@
 .ivy/
 build/
+example/
 lib/
 log/
 nbproject/
