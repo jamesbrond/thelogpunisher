@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.json.simple.JSONValue;
 
 public class LogObject implements Comparable<LogObject> {
@@ -12,10 +14,15 @@ public class LogObject implements Comparable<LogObject> {
   public static final String MATCHER_KEY_DATE = "date";
   public static final String MATCHER_KEY_MESSAGE = "message";
   public static final String MATCHER_KEY_FILENAME = "filename";
+  public static final String MATCHER_KEY_USER = "user";
+  public static final String MATCHER_KEY_IP = "ip";
+  public static final String MATCHER_KEY_SESSION = "session";
 
   private static final String OUTPUT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
   private final DateTimeFormatter dateFormatter;
+
+  private final String[] keys = {MATCHER_KEY_DATE, MATCHER_KEY_MESSAGE, MATCHER_KEY_FILENAME, MATCHER_KEY_USER, MATCHER_KEY_IP, MATCHER_KEY_SESSION};
 
   private final Map<String, Object> logRecord;
 
@@ -25,7 +32,7 @@ public class LogObject implements Comparable<LogObject> {
   }
 
   public LocalDateTime getDate() {
-    return (LocalDateTime)logRecord.get(MATCHER_KEY_DATE);
+    return (LocalDateTime) logRecord.get(MATCHER_KEY_DATE);
   }
 
   public String getFormatDate(LocalDateTime date) {
@@ -33,15 +40,15 @@ public class LogObject implements Comparable<LogObject> {
   }
 
   public String getMessage() {
-    return (String)logRecord.get(MATCHER_KEY_MESSAGE);
+    return (String) logRecord.get(MATCHER_KEY_MESSAGE);
   }
 
   public String getFilename() {
-    return (String)logRecord.get(MATCHER_KEY_FILENAME);
+    return (String) logRecord.get(MATCHER_KEY_FILENAME);
   }
 
   public String get(String key) {
-    return (String)logRecord.get(key);
+    return (String) logRecord.get(key);
   }
 
   public int size() {
@@ -56,34 +63,26 @@ public class LogObject implements Comparable<LogObject> {
     return replace(format, logRecord);
   }
 
-  private String replace(String str, Map<String, Object> map) {
-    StringBuilder sb = new StringBuilder();
-    char[] strArray = str.toCharArray();
-    int i = 0;
-    while (i < strArray.length - 1) {
-      if (strArray[i] == '$' && strArray[i + 1] == '{') {
-        i = i + 2;
-        int begin = i;
-        while (strArray[i] != '}') {
-          ++i;
+  private String replace(String template, Map<String, Object> replacements) {
+    String str = template;
+    Pattern p;
+    Matcher m;
+    Object replace;
+    String regexp = "%%([-\\d]*)(%s+)";
+    for (String k : keys) {
+      p = Pattern.compile(String.format(regexp, k));
+      m = p.matcher(str);
+      if (m.find()) {
+        replace = replacements.get(m.group(2));
+        if (null == replace) {
+          replace = "";
+        } else if (replace instanceof LocalDateTime) {
+          replace = getFormatDate((LocalDateTime) replace);
         }
-        Object obj = map.get(str.substring(begin, i++));
-        if (null == obj) {
-          sb.append('\t');
-        } else if (obj instanceof LocalDateTime) {
-          sb.append(getFormatDate((LocalDateTime)obj));
-        } else {
-          sb.append(obj);
-        }
-      } else {
-        sb.append(strArray[i]);
-        ++i;
+        str = str.replace(m.group(0), String.format(String.format("%%%ss", m.group(1)), replace));
       }
     }
-    if (i < strArray.length) {
-      sb.append(strArray[i]);
-    }
-    return sb.toString();
+    return str;
   }
 
   @Override
