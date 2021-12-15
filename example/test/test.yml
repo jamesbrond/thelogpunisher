@@ -20,7 +20,7 @@ logs:
       # the locale whose date format symbols should be used to parse date in log file
       locale: en
       # the expression to match the log row
-      pattern: "([0-9\\.]+) - \\w+ \\[([\\w:/]+\\s[+\\-]\\d{4})\\] (.*)"
+      pattern: "([0-9\\.]+) - - \\[([\\w:/]+\\s[+\\-]\\d{4})\\] (.*)"
       # the indexes of a capturing groups in this matcher's pattern of the global matching row pattern
       matches:
         ip: 1
@@ -51,6 +51,18 @@ logs:
         date: 1
         message: 2
 
+  # Apache Tomcat localhost output file
+  - type: log
+    file: localhost.2021-12-13.log
+    options:
+      dateformat: "dd-MMM-yyyy HH:mm:ss.SSS"
+      locale: en
+      pattern: "([0-9a-zA-Z/-]+ \\d{2}:\\d{2}:\\d{2}.\\d{3}) (.*)"
+      matches:
+        date: 1
+        message: 2
+
+
   # CSV export of WWWUSERS table with query:
   # SELECT loginid, euserid, ip, to_char(lastdtm, 'DD/MM/YYYY HH24:Mi:SS') lastdtm, sessionid, remoteuser, instname
   #   FROM wwwusers
@@ -67,7 +79,7 @@ logs:
       matches:
         user: 0
         ip: 2
-        date: 3
+        date: 7
         session: 4
 
   # CSV export of RISLOG table with query:
@@ -107,23 +119,26 @@ logs:
 #  2019-01-09/09:12:38.971 TRACE  #48F72432235F8960838FF320EF36BCF3 (@RIS) ck.risweb.CKRequestProcessor::process (76): Cookies length = 11
 #  2019-01-09/12:36:11.543 TRACE [SQL] #FA097F1C9122BBF0A205E0DACB6EA77D (@RIS) ck.risweb.RISDBUtils::updateWWWUsers (1474): UPDATE wwwusers SET lastdtm = sysdate + interval '60' minute WHERE loginid = 'RIS       ' AND sessionid = 'FA097F1C9122BBF0A205E0DACB6EA77D'
 #  Rows example (version 20.0.1)
-#  2021-09-02/12:41:27.674 INFO  #FA097F1C9122BBF0A205E0DACB6EA77D  ck.risweb.LoginAction::forward (489):  returning: success redirecting to /indexi.do  
+#  2021-09-02/12:41:27.674 INFO  #FA097F1C9122BBF0A205E0DACB6EA77D  ck.risweb.LoginAction::forward (489):  returning: success redirecting to /indexi.do
 #  2021-09-02/12:41:27.759 TRACE #FA097F1C9122BBF0A205E0DACB6EA77D (@RIS) ck.risweb.CKRequestProcessor::process (77):  Cookies length = 10
 #  2021-09-02/12:42:58.529 TRACE #FA097F1C9122BBF0A205E0DACB6EA77D (@RIS) ck.risweb.RISDBUtils::updateWWWUsers (1474): [SQL] UPDATE wwwusers SET lastdtm = sysdate + interval '60' minute WHERE loginid = 'RIS       ' AND sessionid = 'FA097F1C9122BBF0A205E0DACB6EA77D'
   - type: log
     file: risweb.log
     options:
       dateformat: "yyyy-MM-dd'/'HH:mm:ss.SSS"
-      pattern: "([0-9\\/:\\\\.-]+) \\w+ (#(\\w+))? (\\(@(\\w+)\\))?\\s+([0-9a-zA-Z_\\$\\.-]+::[0-9a-zA-Z_\\$<>\\\\.-]+) \\((\\d+)\\): (\\[(.+)\\])? (.*)"
+      pattern: "([0-9\\/:\\.-]+) \\w+\\s+(\\[(.+)\\]\\s*)?(#(\\w+)\\s*)?(\\(@(\\w+)\\)\\s*)?[0-9a-zA-Z_$\\.-]+::[0-9a-zA-Z_\\$<>\\.-]+ \\(\\d+\\): (.*)"
       matches:
         date: 1
-        session: 3
-        user: 5
-        message: 10
-      # details, like filters improve are regular expression that match the log message and get more details from it.
-      # unlike filters details do not prevent other rows to be matched. Filters and details are mutual exclusive
+        session: 5
+        user: 7
+        message: 8
       details:
         - pattern: "session created: (\\w+)"
-          # the indexes of a capturing groups in this matcher's pattern of the filter regexp
+          matches:
+            session: 1
+        - pattern: "sessionDestroyed: (\\w+)"
+          matches:
+            session: 1
+        - pattern: "deleting session (\\w+)"
           matches:
             session: 1
